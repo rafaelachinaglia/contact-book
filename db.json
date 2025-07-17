@@ -1,3 +1,12 @@
 {
-  "contacts": []
+  "contacts": [
+    {
+      "id": 1,
+      "name": "Maria",
+      "category": "Amigos",
+      "emails": ["maria@gmail.com"],
+      "phones": ["11999999999"],
+      "addresses": ["Rua A, 123"]
+    }
+  ]
 }
