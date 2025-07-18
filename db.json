@@ -1,7 +1,6 @@
 {
   "contacts": [
     {
-      "id": "1",
       "name": "Maria",
       "category": "Amigos",
       "emails": [
@@ -12,22 +11,8 @@
       ],
       "addresses": [
         "Rua A, 123"
-      ]
-    },
-    {
-      "id": "6260",
-      "name": "Rafaela",
-      "category": "Amigos",
-      "emails": [
-        "rafaelachinaglia@hotmail.com",
-        ""
       ],
-      "phones": [
-        "19994516845"
-      ],
-      "addresses": [
-        "R. Armando Strazzacappa"
-      ]
+      "id": "1"
     }
   ]
 }
