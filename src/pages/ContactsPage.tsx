@@ -4,43 +4,62 @@ import { EditContactModal } from "../components/EditContactModal";
 import { useContacts } from "../hooks/useContacts";
 import type { Contact } from "../types/Contact";
 
-// Função de agrupamento por inicial do nome
-function groupContactsByInitial(contacts: Contact[]) {
-  const grouped: Record<string, Contact[]> = {};
-
-  contacts.forEach((contact) => {
-    const initial = contact.name.charAt(0).toUpperCase();
-    if (!grouped[initial]) {
-      grouped[initial] = [];
-    }
-    grouped[initial].push(contact);
-  });
-
-  return grouped;
-}
-
 export function ContactsPage() {
   const { contacts, loading, error, removeContact } = useContacts();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const groupedContacts = groupContactsByInitial(contacts);
-  const sortedInitials = Object.keys(groupedContacts).sort();
+  const filteredContacts = contacts.filter((contact) =>
+    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const groupedContacts = filteredContacts.reduce((groups, contact) => {
+    const groupKey = contact.name[0].toUpperCase();
+    if (!groups[groupKey]) {
+      groups[groupKey] = [];
+    }
+    groups[groupKey].push(contact);
+    return groups;
+  }, {} as Record<string, Contact[]>);
+
+  function highlightMatch(name: string, term: string) {
+    if (!term) return name;
+
+    const regex = new RegExp(`(${term})`, "ig");
+    const parts = name.split(regex);
+
+    return parts.map((part, index) =>
+      part.toLowerCase() === term.toLowerCase() ? (
+        <mark key={index} style={{ backgroundColor: "#ffeaa7" }}>{part}</mark>
+      ) : (
+        <span key={index}>{part}</span>
+      )
+    );
+  }
 
   return (
     <div>
       <h2>Contact List</h2>
       <AddContactForm />
 
+      <input
+        type="text"
+        placeholder="Search contacts..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ margin: "16px 0", padding: "8px", width: "100%" }}
+      />
+
       {loading && <p>Loading...</p>}
       {error && <p>{error}</p>}
 
-      {sortedInitials.map((initial) => (
-        <div key={initial}>
-          <h3>{initial}</h3>
+      {Object.entries(groupedContacts).map(([category, contacts]) => (
+        <div key={category} style={{ marginBottom: "24px" }}>
+          <h3>{category}</h3>
           <ul>
-            {groupedContacts[initial].map((contact) => (
+            {contacts.map((contact) => (
               <li key={contact.id}>
-                <strong>{contact.name}</strong> — {contact.category}
+                <strong>{highlightMatch(contact.name, searchTerm)}</strong> — {contact.category}
                 <div style={{ marginTop: "4px" }}>
                   <button onClick={() => setSelectedContact(contact)}>Edit</button>
                   <button

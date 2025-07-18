@@ -13,6 +13,48 @@
         "Rua A, 123"
       ],
       "id": "1"
+    },
+    {
+      "id": "098b",
+      "name": "Rafaela Chinaglia Ferreira",
+      "category": "Familia",
+      "emails": [
+        "rafaelachinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19994516845"
+      ],
+      "addresses": [
+        "R. Professor Antônio Nogueira Braga, 107, Casa 8"
+      ]
+    },
+    {
+      "id": "7314",
+      "name": "Renata Chinaglia Ferreira",
+      "category": "Familia",
+      "emails": [
+        "renata_chinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19991128451"
+      ],
+      "addresses": [
+        "R. DELPHINA MEIRELLES ARRIVABENE"
+      ]
+    },
+    {
+      "id": "b6ae",
+      "name": "MARIANA M MARONEZI",
+      "category": "Familia",
+      "emails": [
+        "rafaelachinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19994516845"
+      ],
+      "addresses": [
+        "R. PROFESSOR ANTONIO NOGUEIRA BRAGA"
+      ]
     }
   ]
 }
