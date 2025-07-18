@@ -1,8 +1,8 @@
-import { useState } from 'react';
-import { AddContactForm } from '../components/AddContactForm';
-import { EditContactModal } from '../components/EditContactModal';
-import { useContacts } from '../hooks/useContacts';
-import type { Contact } from '../types/Contact';
+import { useState } from "react";
+import { AddContactForm } from "../components/AddContactForm";
+import { EditContactModal } from "../components/EditContactModal";
+import { useContacts } from "../hooks/useContacts";
+import type { Contact } from "../types/Contact";
 
 export function ContactsPage() {
   const { contacts, loading, error, removeContact } = useContacts();
@@ -20,9 +20,19 @@ export function ContactsPage() {
         {contacts.map((contact) => (
           <li key={contact.id}>
             <strong>{contact.name}</strong> — {contact.category}
-            <div style={{ marginTop: '4px' }}>
+            <div style={{ marginTop: "4px" }}>
               <button onClick={() => setSelectedContact(contact)}>Edit</button>
-              <button onClick={() => removeContact(contact.id)} style={{ marginLeft: '8px' }}>
+              <button
+                onClick={() => {
+                  const confirmed = window.confirm(
+                    `Are you sure you want to delete ${contact.name}?`
+                  );
+                  if (confirmed) {
+                    removeContact(contact.id);
+                  }
+                }}
+                style={{ marginLeft: "8px" }}
+              >
                 Delete
               </button>
             </div>
