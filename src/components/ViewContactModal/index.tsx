@@ -18,8 +18,10 @@ import {
   CloseButton,
   TrashButton,
   customModalStyles,
+  InfoSelect,
 } from "./styles";
 import { Pencil, Trash2 } from "lucide-react";
+import { useCategories } from "../../hooks/useCategories";
 
 interface Props {
   contact: Contact;
@@ -72,6 +74,7 @@ export function ViewContactModal({
   onSave,
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
+  const { categories } = useCategories();
 
   const {
     register,
@@ -129,26 +132,22 @@ export function ViewContactModal({
       contentLabel="Visualizar ou Editar Contato"
       style={customModalStyles}
     >
-      {/* Ícone de editar no canto superior direito */}
       {!isEditing && (
         <EditButton onClick={() => setIsEditing(true)} title="Editar">
           <Pencil />
         </EditButton>
       )}
 
-      {/* Avatar com inicial do nome */}
       <AvatarCircle>{firstLetter}</AvatarCircle>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalContent>
-          {/* Nome em full width */}
           <InfoGroup fullWidth>
             <InfoLabel>Nome</InfoLabel>
             <InfoInput readOnly={!isEditing} {...register("name")} />
             {errors.name && <span>{errors.name.message}</span>}
           </InfoGroup>
 
-          {/* Telefone + E-mail */}
           {phoneFields.map((field, index) => (
             <InfoGroup key={field.id}>
               <InfoLabel>Telefone</InfoLabel>
@@ -175,7 +174,6 @@ export function ViewContactModal({
             </InfoGroup>
           ))}
 
-          {/* Endereço */}
           {addressFields.map((field, index) => (
             <InfoGroup key={field.id}>
               <InfoLabel>Endereço</InfoLabel>
@@ -189,10 +187,26 @@ export function ViewContactModal({
             </InfoGroup>
           ))}
 
-          {/* Grupo */}
           <InfoGroup>
             <InfoLabel>Grupo</InfoLabel>
-            <InfoInput readOnly={!isEditing} {...register("category")} />
+            {isEditing ? (
+             <InfoSelect {...register("category")}>
+                <option value="">Selecione um grupo</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </InfoSelect>
+            ) : (
+              <InfoInput
+                readOnly
+                value={
+                  categories.find((c) => c.id === contact.category)?.name ||
+                  "Grupo não encontrado"
+                }
+              />
+            )}
             {errors.category && <span>{errors.category.message}</span>}
           </InfoGroup>
         </ModalContent>

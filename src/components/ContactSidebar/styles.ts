@@ -78,5 +78,23 @@ export const Sidebar = styled.aside`
         }
       }
     }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        cursor: pointer;
+        padding: 8px 12px;
+        border-radius: 6px;
+        transition: background-color 0.2s, color 0.2s;
+
+        &:hover {
+          background-color: #ae9a9a43;
+          color: #d1c4e9;
+        }
+      }
+    }
   }
 `;

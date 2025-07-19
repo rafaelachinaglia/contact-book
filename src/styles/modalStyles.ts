@@ -10,5 +10,8 @@ export const customModalStyles = {
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     zIndex: 999,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 };

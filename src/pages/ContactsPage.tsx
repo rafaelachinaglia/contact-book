@@ -16,6 +16,7 @@ import {
 import { SearchAndAddBar } from "../components/SearchAndAddBar";
 import { ContactSidebar } from "../components/ContactSidebar/index";
 import { Tag } from "lucide-react";
+import { useCategories } from "../hooks/useCategories";
 
 export function ContactsPage() {
   const { contacts, loading, error, removeContact, editContact } =
@@ -23,10 +24,21 @@ export function ContactsPage() {
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const { categories } = useCategories();
 
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Busca o nome da categoria selecionada
+  const selectedCategoryName = selectedGroup
+    ? categories.find((cat) => cat.id === selectedGroup)?.name
+    : null;
+
+  const filteredContacts = contacts
+    .filter((contact) =>
+      contact.name.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .filter((contact) =>
+      selectedGroup ? contact.category === selectedGroup : true
+    );
 
   const groupedContacts = filteredContacts.reduce<Record<string, Contact[]>>(
     (groups, contact) => {
@@ -40,11 +52,19 @@ export function ContactsPage() {
 
   return (
     <Container>
-      <ContactSidebar contactCount={contacts.length} />
+      <ContactSidebar
+        contactCount={contacts.length}
+        onSelectGroup={(group) => setSelectedGroup(group)}
+        contacts={contacts} 
+      />
 
       <MainContent>
         <SectionTitle>
-          <h2>Todos os contatos</h2>
+          <h2>
+            {selectedGroup
+              ? `${selectedCategoryName ?? selectedGroup}`
+              : "Todos os contatos"}
+          </h2>
         </SectionTitle>
 
         <SearchAndAddBar
@@ -57,9 +77,9 @@ export function ContactsPage() {
         {error && <p>{error}</p>}
 
         <ContactList>
-          {Object.entries(groupedContacts).map(([category, contacts]) => (
-            <ContactGroup key={category}>
-              <h3>{category}</h3>
+          {Object.entries(groupedContacts).map(([groupKey, contacts]) => (
+            <ContactGroup key={groupKey}>
+              <h3>{groupKey}</h3>
               <ul>
                 {contacts.map((contact) => (
                   <ContactListItem
@@ -69,7 +89,8 @@ export function ContactsPage() {
                     <ContactName>{contact.name}</ContactName>
                     <ContactTag>
                       <Tag size={14} />
-                      {contact.category}
+                      {categories.find((cat) => cat.id === contact.category)
+                        ?.name || "Sem grupo"}
                     </ContactTag>
                   </ContactListItem>
                 ))}
@@ -78,7 +99,6 @@ export function ContactsPage() {
           ))}
         </ContactList>
 
-        {/* Modal de visualização/edição */}
         {selectedContact && (
           <ViewContactModal
             contact={selectedContact}
@@ -100,7 +120,6 @@ export function ContactsPage() {
           />
         )}
 
-        {/* Modal de adição */}
         <AddContactModal
           isOpen={isAddModalOpen}
           onRequestClose={() => setIsAddModalOpen(false)}

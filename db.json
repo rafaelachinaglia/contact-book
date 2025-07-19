@@ -2,7 +2,7 @@
   "contacts": [
     {
       "name": "Maria",
-      "category": "Amigos",
+      "category": "2",
       "emails": [
         "teeste@gmail.com"
       ],
@@ -13,48 +13,24 @@
         "Rua A, 123"
       ],
       "id": "1"
+    }
+  ],
+  "categories": [
+    {
+      "id": "1",
+      "name": "Família"
     },
     {
-      "id": "098b",
-      "name": "Rafaela Chinaglia Ferreira",
-      "category": "Familia",
-      "emails": [
-        "rafaelachinaglia@hotmail.com"
-      ],
-      "phones": [
-        "19994516845"
-      ],
-      "addresses": [
-        "R. Professor Antônio Nogueira Braga, 107, Casa 8"
-      ]
+      "id": "2",
+      "name": "Amigos"
     },
     {
-      "id": "7314",
-      "name": "Renata Chinaglia Ferreira",
-      "category": "Familia",
-      "emails": [
-        "renata_chinaglia@hotmail.com"
-      ],
-      "phones": [
-        "19991128451"
-      ],
-      "addresses": [
-        "R. DELPHINA MEIRELLES ARRIVABENE"
-      ]
+      "id": "3",
+      "name": "Trabalho"
     },
     {
-      "id": "b6ae",
-      "name": "MARIANA M MARONEZI",
-      "category": "Familia",
-      "emails": [
-        "rafaelachinaglia@hotmail.com"
-      ],
-      "phones": [
-        "19994516845"
-      ],
-      "addresses": [
-        "R. PROFESSOR ANTONIO NOGUEIRA BRAGA"
-      ]
+      "id": "ca57d1dd-9a31-47f8-b345-24b7e1d24387",
+      "name": "Teste"
     }
   ]
 }

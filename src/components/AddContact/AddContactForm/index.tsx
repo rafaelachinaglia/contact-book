@@ -3,6 +3,7 @@ import type { SubmitHandler, DeepPartial } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useContacts } from "../../../hooks/useContacts";
+import { useCategories } from "../../../hooks/useCategories";
 import {
   Form,
   FieldGroup,
@@ -15,6 +16,7 @@ import {
   SubmitButton,
   CancelButton,
 } from "./styles";
+import { Select } from "../../Form/Select";
 
 interface AddContactFormProps {
   onSuccess?: () => void;
@@ -69,6 +71,7 @@ const schema = yup
 
 export function AddContactForm({ onSuccess }: AddContactFormProps) {
   const { addContact } = useContacts();
+  const { categories } = useCategories();
 
   const {
     register,
@@ -186,7 +189,14 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
 
       <FieldGroup>
         <Label>Grupo</Label>
-        <Input placeholder="Digite o grupo" {...register("category")} />
+        <Select {...register("category")}>
+          <option value="">Selecione um grupo</option>
+          {categories.map((category) => (
+            <option key={category.id} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </Select>
         {errors.category && (
           <ErrorMessage>{errors.category.message}</ErrorMessage>
         )}
