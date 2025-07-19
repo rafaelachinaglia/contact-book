@@ -13,6 +13,62 @@
         "Rua A, 123"
       ],
       "id": "1"
+    },
+    {
+      "name": "MARIANA M MARONEZI",
+      "category": "1",
+      "emails": [
+        "rafaelachinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19994516845"
+      ],
+      "addresses": [
+        "R. PROFESSOR ANTONIO NOGUEIRA BRAGA"
+      ],
+      "id": "f047"
+    },
+    {
+      "id": "aee4",
+      "name": "Helena",
+      "category": "1",
+      "emails": [
+        "renata_chinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19991128451"
+      ],
+      "addresses": [
+        "R. DELPHINA MEIRELLES ARRIVABENE"
+      ]
+    },
+    {
+      "id": "4076",
+      "name": "Isabel",
+      "category": "3",
+      "emails": [
+        "rafaelachinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19994516845"
+      ],
+      "addresses": [
+        "R. Professor Antônio Nogueira Braga, 107, Casa 8"
+      ]
+    },
+    {
+      "id": "ee61",
+      "name": "Rafaela Chinaglia Ferreira",
+      "category": "Família",
+      "emails": [
+        "rafaelachinaglia@hotmail.com"
+      ],
+      "phones": [
+        "19994516845"
+      ],
+      "addresses": [
+        "R. Professor Antônio Nogueira Braga, 107, Casa 8"
+      ]
     }
   ],
   "categories": [
@@ -27,10 +83,6 @@
     {
       "id": "3",
       "name": "Trabalho"
-    },
-    {
-      "id": "ca57d1dd-9a31-47f8-b345-24b7e1d24387",
-      "name": "Teste"
     }
   ]
 }

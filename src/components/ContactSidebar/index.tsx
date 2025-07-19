@@ -34,14 +34,14 @@ export function ContactSidebar({
     const categoryName = categories.find((cat) => cat.id === categoryId)?.name;
 
     if (count > 0) {
-      alert(`O grupo "${categoryName}" possui contatos associados e não pode ser excluído.`);
+      alert(
+        `O grupo "${categoryName}" possui contatos associados e não pode ser excluído.`
+      );
       return;
     }
 
-    const confirmDelete = window.confirm(`Deseja excluir o grupo "${categoryName}"?`);
-    if (confirmDelete) {
-      deleteCategory(categoryId);
-    }
+    console.log("aqqqqqqqqq");
+    deleteCategory(categoryId);
   };
 
   return (
@@ -54,7 +54,9 @@ export function ContactSidebar({
           <h1>Contatos</h1>
         </div>
         <nav>
-          <p onClick={() => onSelectGroup(null)}>Todos os contatos ({contactCount})</p>
+          <p onClick={() => onSelectGroup(null)}>
+            Todos os contatos ({contactCount})
+          </p>
           <hr />
           <div className="group-wrapper">
             <span>Grupos</span>
@@ -68,8 +70,18 @@ export function ContactSidebar({
           </div>
           <ul>
             {categories.map((category) => (
-              <li key={category.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span onClick={() => onSelectGroup(category.id)} style={{ flex: 1 }}>
+              <li
+                key={category.id}
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <span
+                  onClick={() => onSelectGroup(category.id)}
+                  style={{ flex: 1 }}
+                >
                   {category.name} ({contactCountsByCategory[category.id] || 0})
                 </span>
                 <X

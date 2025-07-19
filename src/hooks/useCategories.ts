@@ -31,7 +31,7 @@ export function useCategories() {
   }
 
   async function deleteCategory(id: string) {
-  await fetch(`http://localhost:3001/category/${id}`, { method: "DELETE" });
+await fetch(`http://localhost:3001/categories/${id}`, { method: "DELETE" });
   setCategories((prev) => prev.filter((c) => c.id !== id));
 }
 
