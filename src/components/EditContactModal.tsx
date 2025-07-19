@@ -15,7 +15,6 @@ type FormData = {
   addresses: Item[];
 };
 
-// Definindo o esquema de validação com o yup
 const schema = yup
   .object({
     name: yup.string().required("Name is required"),
@@ -52,14 +51,6 @@ const schema = yup
       .required(),
   })
   .required();
-
-// type FormData = {
-//   name: string;
-//   category: string;
-//   emails: { value: string }[];  // Garantir que emails seja um array não opcional
-//   phones: { value: string }[];  // Garantir que phones seja um array não opcional
-//   addresses: { value: string }[];  // Garantir que addresses seja um array não opcional
-// };
 
 type Props = {
   isOpen: boolean;
@@ -105,7 +96,6 @@ export function EditContactModal({ isOpen, onClose, contact }: Props) {
     name: "addresses",
   });
 
-  // Ajuste no onSubmit: precisa ser explicitamente tipado como SubmitHandler<FormData>
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     const formattedData = {
       ...data,

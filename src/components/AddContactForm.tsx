@@ -4,6 +4,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useContacts } from "../hooks/useContacts";
 
+interface AddContactFormProps {
+  onSuccess?: () => void;
+}
+
 type Item = { value: string };
 
 type FormData = {
@@ -14,7 +18,6 @@ type FormData = {
   addresses: Item[];
 };
 
-// ✅ Schema de validação corrigido
 const schema = yup
   .object({
     name: yup.string().required("Name is required"),
@@ -23,7 +26,10 @@ const schema = yup
       .array()
       .of(
         yup.object({
-          value: yup.string().email("Invalid email").required("Email is required"),
+          value: yup
+            .string()
+            .email("Invalid email")
+            .required("Email is required"),
         })
       )
       .min(1, "At least one email is required")
@@ -49,7 +55,7 @@ const schema = yup
   })
   .required();
 
-export function AddContactForm() {
+export function AddContactForm({ onSuccess }: AddContactFormProps) {
   const { addContact } = useContacts();
 
   const {
@@ -61,11 +67,11 @@ export function AddContactForm() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: '',
-      category: '',
-      emails: [{ value: '' }],
-      phones: [{ value: '' }],
-      addresses: [{ value: '' }],
+      name: "",
+      category: "",
+      emails: [{ value: "" }],
+      phones: [{ value: "" }],
+      addresses: [{ value: "" }],
     } as DeepPartial<FormData>,
   });
 
@@ -119,7 +125,7 @@ export function AddContactForm() {
             <p>{errors.emails?.[index]?.value?.message}</p>
           </div>
         ))}
-        <button type="button" onClick={() => addEmail({ value: '' })}>
+        <button type="button" onClick={() => addEmail({ value: "" })}>
           + Add email
         </button>
       </div>
@@ -132,7 +138,7 @@ export function AddContactForm() {
             <p>{errors.phones?.[index]?.value?.message}</p>
           </div>
         ))}
-        <button type="button" onClick={() => addPhone({ value: '' })}>
+        <button type="button" onClick={() => addPhone({ value: "" })}>
           + Add phone
         </button>
       </div>
@@ -145,7 +151,7 @@ export function AddContactForm() {
             <p>{errors.addresses?.[index]?.value?.message}</p>
           </div>
         ))}
-        <button type="button" onClick={() => addAddress({ value: '' })}>
+        <button type="button" onClick={() => addAddress({ value: "" })}>
           + Add address
         </button>
       </div>

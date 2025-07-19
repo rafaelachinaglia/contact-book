@@ -1,94 +1,121 @@
-import { useState } from "react";
-import { AddContactForm } from "../components/AddContactForm";
+import { useEffect, useState } from "react";
+import { AddContactModal } from "../components/AddContactModal";
 import { EditContactModal } from "../components/EditContactModal";
 import { useContacts } from "../hooks/useContacts";
 import type { Contact } from "../types/Contact";
+import {
+  Container,
+  MainContent,
+  SectionTitle,
+  ContactList,
+  ContactGroup,
+} from "./styles";
+import { SearchAndAddBar } from "../components/SearchAndAddBar";
+import { ContactCard } from "../components/ContactCard";
+import { ContactSidebar } from "../components/ContactSidebar/index";
 
 export function ContactsPage() {
   const { contacts, loading, error, removeContact } = useContacts();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      const target = event.target as Node;
+      const dropdowns = document.querySelectorAll(".dropdown-wrapper");
+
+      const clickedInsideSomeDropdown = Array.from(dropdowns).some((dropdown) =>
+        dropdown.contains(target)
+      );
+
+      if (!clickedInsideSomeDropdown) {
+        setOpenMenuId(null);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const groupedContacts = filteredContacts.reduce((groups, contact) => {
-    const groupKey = contact.name[0].toUpperCase();
-    if (!groups[groupKey]) {
-      groups[groupKey] = [];
-    }
-    groups[groupKey].push(contact);
-    return groups;
-  }, {} as Record<string, Contact[]>);
-
-  function highlightMatch(name: string, term: string) {
-    if (!term) return name;
-
-    const regex = new RegExp(`(${term})`, "ig");
-    const parts = name.split(regex);
-
-    return parts.map((part, index) =>
-      part.toLowerCase() === term.toLowerCase() ? (
-        <mark key={index} style={{ backgroundColor: "#ffeaa7" }}>{part}</mark>
-      ) : (
-        <span key={index}>{part}</span>
-      )
-    );
-  }
+  const groupedContacts = filteredContacts.reduce<Record<string, Contact[]>>(
+    (groups, contact) => {
+      const groupKey = contact.name[0].toUpperCase();
+      groups[groupKey] ||= [];
+      groups[groupKey].push(contact);
+      return groups;
+    },
+    {}
+  );
 
   return (
-    <div>
-      <h2>Contact List</h2>
-      <AddContactForm />
+    <Container>
+      <ContactSidebar contactCount={contacts.length} />
 
-      <input
-        type="text"
-        placeholder="Search contacts..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        style={{ margin: "16px 0", padding: "8px", width: "100%" }}
-      />
+      <MainContent>
+        <SectionTitle>
+          <h2>Todos os contatos</h2>
+        </SectionTitle>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+        <SearchAndAddBar
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          onAddContact={() => setIsAddModalOpen(true)}
+        />
 
-      {Object.entries(groupedContacts).map(([category, contacts]) => (
-        <div key={category} style={{ marginBottom: "24px" }}>
-          <h3>{category}</h3>
-          <ul>
-            {contacts.map((contact) => (
-              <li key={contact.id}>
-                <strong>{highlightMatch(contact.name, searchTerm)}</strong> — {contact.category}
-                <div style={{ marginTop: "4px" }}>
-                  <button onClick={() => setSelectedContact(contact)}>Edit</button>
-                  <button
-                    onClick={() => {
+        {loading && <p>Carregando...</p>}
+        {error && <p>{error}</p>}
+
+        <ContactList>
+          {Object.entries(groupedContacts).map(([category, contacts]) => (
+            <ContactGroup key={category}>
+              <h3>{category}</h3>
+              <ul>
+                {contacts.map((contact) => (
+                  <ContactCard
+                    key={contact.id}
+                    contact={contact}
+                    searchTerm={searchTerm}
+                    isOpen={openMenuId === contact.id}
+                    onToggleMenu={() =>
+                      setOpenMenuId(
+                        openMenuId === contact.id ? null : contact.id
+                      )
+                    }
+                    onEdit={() => setSelectedContact(contact)}
+                    onDelete={() => {
                       const confirmed = window.confirm(
-                        `Are you sure you want to delete ${contact.name}?`
+                        `Tem certeza que deseja excluir ${contact.name}?`
                       );
                       if (confirmed) {
                         removeContact(contact.id);
                       }
                     }}
-                    style={{ marginLeft: "8px" }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+                  />
+                ))}
+              </ul>
+            </ContactGroup>
+          ))}
+        </ContactList>
 
-      {selectedContact && (
-        <EditContactModal
-          isOpen={!!selectedContact}
-          contact={selectedContact}
-          onClose={() => setSelectedContact(null)}
+        {selectedContact && (
+          <EditContactModal
+            isOpen={!!selectedContact}
+            contact={selectedContact}
+            onClose={() => setSelectedContact(null)}
+          />
+        )}
+
+        <AddContactModal
+          isOpen={isAddModalOpen}
+          onRequestClose={() => setIsAddModalOpen(false)}
         />
-      )}
-    </div>
+      </MainContent>
+    </Container>
   );
 }
