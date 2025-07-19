@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AddContactModal } from "../components/AddContact/AddContactModal";
-import { EditContactModal } from "../components/EditContactModal";
+import { ViewContactModal } from "../components/ViewContactModal";
 import { useContacts } from "../hooks/useContacts";
 import type { Contact } from "../types/Contact";
 import {
@@ -9,35 +9,20 @@ import {
   SectionTitle,
   ContactList,
   ContactGroup,
+  ContactListItem,
+  ContactName,
+  ContactTag,
 } from "./styles";
 import { SearchAndAddBar } from "../components/SearchAndAddBar";
-import { ContactCard } from "../components/ContactCard";
 import { ContactSidebar } from "../components/ContactSidebar/index";
+import { Tag } from "lucide-react";
 
 export function ContactsPage() {
-  const { contacts, loading, error, removeContact } = useContacts();
+  const { contacts, loading, error, removeContact, editContact } =
+    useContacts();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
-
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as Node;
-      const dropdowns = document.querySelectorAll(".dropdown-wrapper");
-
-      const clickedInsideSomeDropdown = Array.from(dropdowns).some((dropdown) =>
-        dropdown.contains(target)
-      );
-
-      if (!clickedInsideSomeDropdown) {
-        setOpenMenuId(null);
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -77,40 +62,45 @@ export function ContactsPage() {
               <h3>{category}</h3>
               <ul>
                 {contacts.map((contact) => (
-                  <ContactCard
+                  <ContactListItem
                     key={contact.id}
-                    contact={contact}
-                    searchTerm={searchTerm}
-                    isOpen={openMenuId === contact.id}
-                    onToggleMenu={() =>
-                      setOpenMenuId(
-                        openMenuId === contact.id ? null : contact.id
-                      )
-                    }
-                    onEdit={() => setSelectedContact(contact)}
-                    onDelete={() => {
-                      const confirmed = window.confirm(
-                        `Tem certeza que deseja excluir ${contact.name}?`
-                      );
-                      if (confirmed) {
-                        removeContact(contact.id);
-                      }
-                    }}
-                  />
+                    onClick={() => setSelectedContact(contact)}
+                  >
+                    <ContactName>{contact.name}</ContactName>
+                    <ContactTag>
+                      <Tag size={14} />
+                      {contact.category}
+                    </ContactTag>
+                  </ContactListItem>
                 ))}
               </ul>
             </ContactGroup>
           ))}
         </ContactList>
 
+        {/* Modal de visualização/edição */}
         {selectedContact && (
-          <EditContactModal
-            isOpen={!!selectedContact}
+          <ViewContactModal
             contact={selectedContact}
             onClose={() => setSelectedContact(null)}
+            onDelete={(id) => {
+              const confirmed = window.confirm(
+                `Tem certeza que deseja excluir ${selectedContact.name}?`
+              );
+              if (confirmed) {
+                removeContact(id);
+                setSelectedContact(null);
+              }
+            }}
+            onSave={(updated) => {
+              const { id, ...data } = updated;
+              editContact(id, data);
+              setSelectedContact(updated);
+            }}
           />
         )}
 
+        {/* Modal de adição */}
         <AddContactModal
           isOpen={isAddModalOpen}
           onRequestClose={() => setIsAddModalOpen(false)}

@@ -49,3 +49,37 @@ export const ContactGroup = styled.div`
     padding-left: 0;
   }
 `;
+
+export const ContactListItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  background-color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+export const ContactName = styled.span`
+  font-weight: 600;
+  font-size: 16px;
+`;
+
+export const ContactTag = styled.span`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #eee;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+`;
