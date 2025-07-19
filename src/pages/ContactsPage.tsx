@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AddContactModal } from "../components/AddContactModal";
+import { AddContactModal } from "../components/AddContact/AddContactModal";
 import { EditContactModal } from "../components/EditContactModal";
 import { useContacts } from "../hooks/useContacts";
 import type { Contact } from "../types/Contact";
