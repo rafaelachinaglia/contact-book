@@ -7,8 +7,15 @@ export const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
 
-  body {
+  body,
+  input,
+  textarea,
+  select,
+  button {
     font-family: 'Montserrat', sans-serif;
+  }
+
+  body {
     background: ${({ theme }) => theme.colors.background};
     color: ${({ theme }) => theme.colors.text};
   }

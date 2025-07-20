@@ -60,7 +60,7 @@ export const ContactCategory = styled.div`
 
   @media (max-width: 768px) {
     h3 {
-      font-size: 16px;
+      font-size: 14px;
     }
   }
 `;
@@ -106,7 +106,7 @@ export const ContactMetaRow = styled.div`
 
 export const ContactName = styled.span`
   font-weight: 600;
-  font-size: 16px;
+  font-size: 14px;
   max-width: 100%;
   white-space: nowrap;
   overflow: hidden;

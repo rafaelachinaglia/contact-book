@@ -38,7 +38,7 @@ export const Input = styled.input`
   padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 20px;
-  font-size: 16px;
+  font-size: 14px;
   width: 100%;
   box-sizing: border-box;
 
@@ -84,6 +84,11 @@ export const SubmitButton = styled.button`
   border: none;
   border-radius: 20px;
   cursor: pointer;
+  border: 1px solid #61b448ff;
+
+    &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export const CancelButton = styled.button`
@@ -95,6 +100,10 @@ export const CancelButton = styled.button`
   border: none;
   border-radius: 20px;
   cursor: pointer;
+
+    &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export const ModalContentWrapper = styled.div`

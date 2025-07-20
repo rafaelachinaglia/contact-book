@@ -59,7 +59,7 @@ export const InfoInput = styled.input`
   padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 16px;
-  font-size: 16px;
+  font-size: 14px;
 
   &::placeholder {
     color: #aaa;
@@ -76,7 +76,7 @@ export const InfoTextarea = styled.textarea`
   padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 16px;
-  font-size: 16px;
+  font-size: 14px;
   resize: none;
 
   &:read-only {
@@ -90,7 +90,7 @@ export const InfoSelect = styled.select`
   padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 24px;
-  font-size: 16px;
+  font-size: 14px;
   background-color: white;
 
   &:disabled {
@@ -133,12 +133,19 @@ export const SaveButton = styled.button`
   ${baseButtonStyles}
   background-color: #61b448;
   color: white;
+    &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export const CancelButton = styled.button`
   ${baseButtonStyles}
   background-color: #002655ff;
   color: white;
+
+    &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export const EditButton = styled.button`

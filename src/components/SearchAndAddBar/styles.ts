@@ -64,13 +64,7 @@ export const AddContactButton = styled.button`
   transition: background-color 0.3s;
 
   &:hover {
-    background-color: #fff;
-    color: #61b448ff;
-    border: 1px solid #61b448ff;
-
-    svg {
-      color: #61b448;
-    }
+    opacity: 0.9;
   }
 
   svg {

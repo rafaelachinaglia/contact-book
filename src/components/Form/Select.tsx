@@ -4,7 +4,7 @@ export const Select = styled.select<{ disabled?: boolean }>`
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 24px;
-  font-size: 16px;
+  font-size: 14px;
   background-color: white;
 
   &:disabled {
