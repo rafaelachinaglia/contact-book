@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 
 interface CategoryFormProps {
   onSuccess: () => void;
+  isOpen: boolean;
 }
 
 type FormData = {
@@ -23,24 +24,40 @@ const schema = yup.object({
 
 const normalizeName = (name: string) => name.trim().toLowerCase();
 
-export function CategoryForm({ onSuccess }: CategoryFormProps) {
+export function CategoryForm({ onSuccess, isOpen }: CategoryFormProps) {
   const { addCategory, categories } = useCategories();
 
   const {
     register,
     handleSubmit,
     reset,
+    trigger,
+    getValues,
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     mode: "onSubmit",
+    reValidateMode: "onChange",
   });
 
   useEffect(() => {
-    reset();
-  }, []);
+    if (isOpen) {
+      reset();
+    }
+  }, [isOpen, reset]);
 
-  const onSubmit = async (data: FormData) => {
+  const handleManualSubmit = async () => {
+    const isValid = await trigger("name");
+
+    if (!isValid) {
+      const currentErrors = errors;
+      if (currentErrors.name?.message) {
+        toast.error(currentErrors.name.message);
+      }
+      return;
+    }
+
+    const data = getValues();
     const normalized = normalizeName(data.name);
 
     const exists = categories.some(
@@ -61,12 +78,8 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
     }
   };
 
-  const onError = () => {
-    if (errors.name?.message) toast.error(errors.name.message);
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit, onError)}>
+    <form>
       <Input
         type="text"
         placeholder="Nome da Categoria"
@@ -77,7 +90,9 @@ export function CategoryForm({ onSuccess }: CategoryFormProps) {
         <Button type="button" onClick={onSuccess} variant="cancel">
           Cancelar
         </Button>
-        <Button type="submit">Adicionar</Button>
+        <Button type="button" onClick={handleManualSubmit}>
+          Adicionar
+        </Button>
       </ModalFooter>
     </form>
   );

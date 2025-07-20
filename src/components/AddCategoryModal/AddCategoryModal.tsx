@@ -20,7 +20,7 @@ export function AddCategoryModal({ isOpen, onRequestClose }: AddCategoryModalPro
         <ModalHeader>
           <ModalTitle>Nova Categoria</ModalTitle>
         </ModalHeader>
-        <CategoryForm onSuccess={onRequestClose} />
+        <CategoryForm onSuccess={onRequestClose} isOpen={isOpen} />
       </ModalContent>
     </Modal>
   );
