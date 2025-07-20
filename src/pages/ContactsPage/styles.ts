@@ -119,12 +119,15 @@ export const ContactName = styled.span`
 `;
 
 export const ContactTag = styled.span`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 6px;
   font-size: 14px;
-  color: #666;
-  min-width: 100px;
+  color: #444;
+  background-color: #f0f0f0; 
+  border-radius: 12px;
+  padding: 2px 10px;
+  max-width: fit-content;
 
   svg {
     flex-shrink: 0;

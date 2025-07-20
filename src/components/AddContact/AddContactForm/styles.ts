@@ -42,6 +42,10 @@ export const Input = styled.input`
   width: 100%;
   box-sizing: border-box;
 
+  &:focus {
+    outline: none;
+    border: solid 1px #61b448;
+  }
   &::placeholder {
     color: #aaa;
   }
@@ -116,6 +120,24 @@ export const ModalContentWrapper = styled.div`
     max-height: 80vh; 
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+  }
+`;
+
+export const RemoveButton = styled.button`
+  background: transparent;
+  border: none;
+  color: #888;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f8d7da;
+    color: #b02a37;
   }
 `;
 

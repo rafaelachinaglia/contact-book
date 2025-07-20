@@ -41,10 +41,15 @@ export const Input = styled.input`
   font-size: 1rem;
   box-sizing: border-box;
 
+  &:focus {
+    outline: none;
+  }
+
   @media (max-width: 768px) {
     font-size: 1rem;
   }
 `;
+
 
 export const ModalFooter = styled.div`
   display: flex;
