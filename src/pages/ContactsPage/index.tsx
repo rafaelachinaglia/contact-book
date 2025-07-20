@@ -21,6 +21,8 @@ import { SearchAndAddBar } from "../../components/SearchAndAddBar";
 import { ContactSidebar } from "../../components/ContactSidebar/index";
 import { Tag, SquareArrowOutUpRight, Menu, Plus } from "lucide-react";
 import { useCategories } from "../../hooks/useCategories";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 
 export function ContactsPage() {
   const { contacts, loading, error, removeContact, editContact } = useContacts();
@@ -52,6 +54,29 @@ export function ContactsPage() {
     },
     {}
   );
+
+  const handleDelete = async (id: number, name: string) => {
+    try {
+      const result = await Swal.fire({
+        title: "Tem certeza?",
+        text: `Deseja excluir ${name}?`,
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#c0392b",
+        cancelButtonColor: "#004080",
+        confirmButtonText: "Sim, excluir",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (result.isConfirmed) {
+        await removeContact(id);
+        toast.success("Contato excluído com sucesso!");
+        setSelectedContact(null);
+      }
+    } catch (error) {
+      toast.error("Erro ao excluir o contato.");
+    }
+  };
 
   return (
     <Container>
@@ -93,60 +118,68 @@ export function ContactsPage() {
         {error && <p>{error}</p>}
 
         <ContactList>
-          {Object.entries(categoryedContacts).map(([categoryKey, contacts]) => (
-            <ContactCategory key={categoryKey}>
-              <h3>{categoryKey}</h3>
-              <ul>
-                {contacts.map((contact) => {
-                  const categoryName =
-                    categories.find((cat) => cat.id === contact.category)
-                      ?.name || "Sem Categoria";
+          {Object.entries(categoryedContacts)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([categoryKey, contacts]) => {
+              const sortedContacts = [...contacts].sort((a, b) =>
+                a.name.localeCompare(b.name)
+              );
 
-                  return (
-                    <ContactListItem
-                      key={contact.id}
-                      onClick={() => setSelectedContact(contact)}
-                    >
-                      <ContactItemContent>
-                        <ContactName title={contact.name}>
-                          {contact.name.length > 50
-                            ? `${contact.name.slice(0, 50)}...`
-                            : contact.name}
-                        </ContactName>
+              return (
+                <ContactCategory key={categoryKey}>
+                  <h3>{categoryKey}</h3>
+                  <ul>
+                    {sortedContacts.map((contact) => {
+                      const categoryName =
+                        categories.find((cat) => cat.id === contact.category)
+                          ?.name || "Sem Categoria";
 
-                        <ContactMetaRow>
-                          <ContactTag>
-                            <Tag size={14} color="#61b448ff" />
-                            {categoryName}
-                          </ContactTag>
-                          <SquareArrowOutUpRight size={16} color="#61b448ff" />
-                        </ContactMetaRow>
-                      </ContactItemContent>
-                    </ContactListItem>
-                  );
-                })}
-              </ul>
-            </ContactCategory>
-          ))}
+                      return (
+                        <ContactListItem
+                          key={contact.id}
+                          onClick={() => setSelectedContact(contact)}
+                        >
+                          <ContactItemContent>
+                            <ContactName title={contact.name}>
+                              {contact.name.length > 50
+                                ? `${contact.name.slice(0, 50)}...`
+                                : contact.name}
+                            </ContactName>
+
+                            <ContactMetaRow>
+                              <ContactTag>
+                                <Tag size={14} color="#61b448ff" />
+                                {categoryName}
+                              </ContactTag>
+                              <SquareArrowOutUpRight
+                                size={16}
+                                color="#61b448ff"
+                              />
+                            </ContactMetaRow>
+                          </ContactItemContent>
+                        </ContactListItem>
+                      );
+                    })}
+                  </ul>
+                </ContactCategory>
+              );
+            })}
         </ContactList>
 
         {selectedContact && (
           <ViewContactModal
             contact={selectedContact}
             onClose={() => setSelectedContact(null)}
-            onDelete={(id) => {
-              const confirmed = window.confirm(
-                `Tem certeza que deseja excluir ${selectedContact.name}?`
-              );
-              if (confirmed) {
-                removeContact(id);
-                setSelectedContact(null);
-              }
-            }}
+            onDelete={(id) => handleDelete(id, selectedContact.name)}
             onSave={(updated) => {
               const { id, ...data } = updated;
-              editContact(id, data);
-              setSelectedContact(updated);
+              try {
+                editContact(id, data);
+                setSelectedContact(updated);
+                toast.success("Contato atualizado com sucesso!");
+              } catch {
+                toast.error("Erro ao atualizar o contato.");
+              }
             }}
           />
         )}

@@ -4,6 +4,7 @@ import { Sidebar } from "./styles";
 import { useCategories } from "../../hooks/useCategories";
 import { AddCategoryModal } from "../AddCategoryModal";
 import type { Contact } from "../../types/Contact";
+import { toast } from "react-toastify";
 
 export interface ContactSidebarProps {
   contactCount: number;
@@ -38,13 +39,14 @@ export function ContactSidebar({
     const categoryName = categories.find((cat) => cat.id === categoryId)?.name;
 
     if (count > 0) {
-      alert(
+      toast.error(
         `A categoria "${categoryName}" possui contatos associados e não pode ser excluída.`
       );
       return;
     }
 
     deleteCategory(categoryId);
+    toast.success(`Categoria "${categoryName}" excluída com sucesso.`);
   };
 
   return (
@@ -73,9 +75,7 @@ export function ContactSidebar({
         </div>
 
         <nav>
-          <p
-            onClick={() => onSelectCategory(null)}
-          >
+          <p onClick={() => onSelectCategory(null)}>
             Todos os contatos ({contactCount})
           </p>
           <hr />

@@ -17,6 +17,7 @@ import {
   CancelButton,
 } from "./styles";
 import { Select } from "../../Form/Select";
+import { toast } from "react-toastify";
 
 interface AddContactFormProps {
   onSuccess?: () => void;
@@ -114,9 +115,14 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
       addresses: data.addresses.map((a) => a.value),
     };
 
-    await addContact(formattedData);
-    reset();
-    onSuccess?.();
+    try {
+      await addContact(formattedData);
+      toast.success("Contato adicionado com sucesso!");
+      reset();
+      onSuccess?.();
+    } catch {
+      toast.error("Erro ao adicionar o contato.");
+    }
   };
 
   return (
@@ -203,10 +209,10 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
       </FieldCategory>
 
       <ButtonRow>
+        <SubmitButton type="submit">Adicionar Contato</SubmitButton>
         <CancelButton type="button" onClick={onSuccess}>
           Cancelar
         </CancelButton>
-        <SubmitButton type="submit">Adicionar Contato</SubmitButton>
       </ButtonRow>
     </Form>
   );

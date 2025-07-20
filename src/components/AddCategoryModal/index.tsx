@@ -10,6 +10,7 @@ import {
   Button,
 } from "./styles";
 import { customModalStyles } from "../../styles/modalStyles";
+import { toast } from "react-toastify";
 
 interface AddCategoryModalProps {
   isOpen: boolean;
@@ -21,10 +22,21 @@ export function AddCategoryModal({ isOpen, onRequestClose }: AddCategoryModalPro
   const { addCategory } = useCategories();
 
   function handleAddCategory() {
-    if (!categoryName.trim()) return;
-    addCategory(categoryName.trim());
-    setCategoryName("");
-    onRequestClose();
+    const trimmedName = categoryName.trim();
+
+    if (!trimmedName) {
+      toast.error("O nome da categoria é obrigatório.");
+      return;
+    }
+
+    try {
+      addCategory(trimmedName);
+      toast.success("Categoria criada com sucesso!");
+      setCategoryName("");
+      onRequestClose();
+    } catch (error) {
+      toast.error("Erro ao adicionar categoria.");
+    }
   }
 
   return (
