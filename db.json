@@ -172,34 +172,6 @@
       ]
     },
     {
-      "id": "461f",
-      "name": "Renata Chinaglia Ferreira",
-      "category": "1",
-      "emails": [
-        "renata_chinaglia@hotmail.com"
-      ],
-      "phones": [
-        "(19)99112-8451"
-      ],
-      "addresses": [
-        "R. DELPHINA MEIRELLES ARRIVABENE"
-      ]
-    },
-    {
-      "id": "09a4",
-      "name": "Rafaela Chinaglia Ferreira",
-      "category": "1",
-      "emails": [
-        "rafaelachinaglia@hotmail.com"
-      ],
-      "phones": [
-        "(19)99451-6845"
-      ],
-      "addresses": [
-        "R. Professor Antônio Nogueira Braga, 107, Casa 8"
-      ]
-    },
-    {
       "id": "f543",
       "name": "Lorelai Girlmore",
       "category": "2",
@@ -254,18 +226,18 @@
       "id": "edc5"
     },
     {
-      "id": "6d08",
-      "name": "Rafaela Chinaglia Ferreiraa",
+      "name": "Renata Chinaglia Ferreiraa",
       "category": "1",
       "emails": [
-        "rafaelachinaglia@hotmail.com"
+        "renata_chinaglia@hotmail.com"
       ],
       "phones": [
-        "(19)99451-6845"
+        "(19)99112-8451"
       ],
       "addresses": [
-        "R. Professor Antônio Nogueira Braga, 107, Casa 8"
-      ]
+        "R. DELPHINA MEIRELLES ARRIVABENE"
+      ],
+      "id": "f9e6"
     }
   ],
   "categories": [
@@ -284,6 +256,10 @@
     {
       "id": "d81d5731-3294-45ce-893d-cdbe94259172",
       "name": "Cobrança"
+    },
+    {
+      "id": "22d04ab7-0461-424c-a1db-e1a89785be54",
+      "name": "tes1"
     }
   ]
 }

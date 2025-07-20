@@ -70,7 +70,6 @@ export function ContactsPage() {
 
       if (result.isConfirmed) {
         await removeContact(id);
-        toast.success("Contato excluído com sucesso!");
         setSelectedContact(null);
       }
     } catch (error) {
@@ -176,7 +175,6 @@ export function ContactsPage() {
               try {
                 editContact(id, data);
                 setSelectedContact(updated);
-                toast.success("Contato atualizado com sucesso!");
               } catch {
                 toast.error("Erro ao atualizar o contato.");
               }
