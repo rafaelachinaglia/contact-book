@@ -1,6 +1,10 @@
 import { BadgePlus, Search } from "lucide-react";
-import { SearchBar } from "./SearchAndAddBar.styles";
-import { SearchInputWrapper, SearchAndAddContainer } from "./SearchAndAddBar.styles";
+import {
+  SearchBar,
+  SearchInputWrapper,
+  SearchAndAddContainer,
+  AddContactButton,
+} from "./styles";
 
 interface Props {
   searchTerm: string;
@@ -9,6 +13,8 @@ interface Props {
 }
 
 export function SearchAndAddBar({ searchTerm, setSearchTerm, onAddContact }: Props) {
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <SearchAndAddContainer>
       <SearchInputWrapper>
@@ -21,25 +27,12 @@ export function SearchAndAddBar({ searchTerm, setSearchTerm, onAddContact }: Pro
         />
       </SearchInputWrapper>
 
-      <button
-        style={{
-          backgroundColor: "#61b448ff",
-          color: "white",
-          border: "none",
-          padding: "10px 20px",
-          borderRadius: "25px",
-          cursor: "pointer",
-          borderColor: "#61b448ff",
-          display: "flex",
-          alignItems: "center",
-          gap: "8px",
-          height: "42px",
-        }}
-        onClick={onAddContact}
-      >
-        <span>Novo Contato</span>
-        <BadgePlus size={18} strokeWidth={2.5} />
-      </button>
+      {!isMobile && (
+        <AddContactButton onClick={onAddContact}>
+          <span>Novo Contato</span>
+          <BadgePlus size={18} strokeWidth={2.5} />
+        </AddContactButton>
+      )}
     </SearchAndAddContainer>
   );
 }

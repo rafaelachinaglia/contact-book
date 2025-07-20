@@ -9,14 +9,18 @@ export interface ContactSidebarProps {
   contactCount: number;
   contacts: Contact[];
   onSelectCategory: (category: string | null) => void;
+  isMobileOpen?: boolean;
+  onCloseMobileMenu?: () => void;
 }
 
 export function ContactSidebar({
   contactCount,
   contacts,
   onSelectCategory,
+  isMobileOpen = false,
+  onCloseMobileMenu,
 }: ContactSidebarProps) {
-  const { categories, deleteCategory } = useCategories(); 
+  const { categories, deleteCategory } = useCategories();
   const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
 
   const contactCountsByCategory = categories.reduce<Record<string, number>>(
@@ -35,26 +39,43 @@ export function ContactSidebar({
 
     if (count > 0) {
       alert(
-        `A categoria "${categoryName}" possui contatos associados e não pode ser excluído.`
+        `A categoria "${categoryName}" possui contatos associados e não pode ser excluída.`
       );
       return;
     }
 
-    console.log("aqqqqqqqqq");
     deleteCategory(categoryId);
   };
 
   return (
     <>
-      <Sidebar className="glass">
+      {isMobileOpen && (
+        <div
+          onClick={onCloseMobileMenu}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100vw",
+            height: "100vh",
+            backgroundColor: "rgba(0, 0, 0, 0.4)",
+            zIndex: 9,
+          }}
+        />
+      )}
+
+      <Sidebar className="glass" data-open={isMobileOpen}>
         <div className="logo">
           <div className="icon-wrapper">
             <Notebook size={18} color="#fff" />
           </div>
           <h1>Contatos</h1>
         </div>
+
         <nav>
-          <p onClick={() => onSelectCategory(null)}>
+          <p
+            onClick={() => onSelectCategory(null)}
+          >
             Todos os contatos ({contactCount})
           </p>
           <hr />
@@ -68,6 +89,7 @@ export function ContactSidebar({
               <BadgePlus size={18} color="#fff" strokeWidth={2.5} />
             </button>
           </div>
+
           <ul>
             {categories.map((category) => (
               <li

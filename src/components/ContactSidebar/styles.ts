@@ -97,4 +97,18 @@ export const Sidebar = styled.aside`
       }
     }
   }
+
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 10;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease-in-out;
+
+    &[data-open="true"] {
+      transform: translateX(0);
+    }
+  }
 `;

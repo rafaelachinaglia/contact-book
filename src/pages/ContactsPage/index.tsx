@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { AddContactModal } from "../components/AddContact/AddContactModal";
-import { ViewContactModal } from "../components/ViewContactModal";
-import { useContacts } from "../hooks/useContacts";
-import type { Contact } from "../types/Contact";
+import { AddContactModal } from "../../components/AddContact/AddContactModal";
+import { ViewContactModal } from "../../components/ViewContactModal";
+import { useContacts } from "../../hooks/useContacts";
+import type { Contact } from "../../types/Contact";
 import {
   Container,
   MainContent,
@@ -12,19 +12,21 @@ import {
   ContactListItem,
   ContactName,
   ContactTag,
+  MobileMenuButton,
+  FloatingAddButton,
 } from "./styles";
-import { SearchAndAddBar } from "../components/SearchAndAddBar";
-import { ContactSidebar } from "../components/ContactSidebar/index";
-import { Tag, SquareArrowOutUpRight } from "lucide-react";
-import { useCategories } from "../hooks/useCategories";
+import { SearchAndAddBar } from "../../components/SearchAndAddBar";
+import { ContactSidebar } from "../../components/ContactSidebar/index";
+import { Tag, SquareArrowOutUpRight, Menu, Plus } from "lucide-react";
+import { useCategories } from "../../hooks/useCategories";
 
 export function ContactsPage() {
-  const { contacts, loading, error, removeContact, editContact } =
-    useContacts();
+  const { contacts, loading, error, removeContact, editContact } = useContacts();
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const { categories } = useCategories();
 
   const selectedCategoryName = selectedCategory
@@ -53,11 +55,29 @@ export function ContactsPage() {
     <Container>
       <ContactSidebar
         contactCount={contacts.length}
-        onSelectCategory={(category) => setSelectedCategory(category)}
         contacts={contacts}
+        onSelectCategory={(category) => {
+          setSelectedCategory(category);
+          setIsMobileSidebarOpen(false);
+        }}
+        isMobileOpen={isMobileSidebarOpen}
+        onCloseMobileMenu={() => setIsMobileSidebarOpen(false)}
       />
 
       <MainContent>
+        {/* Botão de abrir menu no mobile */}
+        <MobileMenuButton
+          onClick={() => setIsMobileSidebarOpen(true)}
+          aria-label="Abrir menu"
+        >
+          <Menu size={24} color="#61b448" />
+        </MobileMenuButton>
+
+        {/* Botão de adicionar contato no mobile */}
+        <FloatingAddButton onClick={() => setIsAddModalOpen(true)}>
+          <Plus size={22} color="#fff" />
+        </FloatingAddButton>
+
         <SectionTitle>
           <h2>
             {selectedCategory
@@ -90,43 +110,21 @@ export function ContactsPage() {
                       key={contact.id}
                       onClick={() => setSelectedContact(contact)}
                     >
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
-                        }}
-                      >
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <ContactName title={contact.name}>
-                            {contact.name.length > 50
-                              ? `${contact.name.slice(0, 50)}...`
-                              : contact.name}
-                          </ContactName>
-                        </div>
+                      <div className="card-top-row">
+                        <ContactName title={contact.name}>
+                          {contact.name.length > 50
+                            ? `${contact.name.slice(0, 50)}...`
+                            : contact.name}
+                        </ContactName>
+                      </div>
 
-                        <div
-                          style={{
-                            flex: 1,
-                            display: "flex",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <ContactTag>
-                            <Tag size={14} color="#61b448ff" />
-                            {categoryName}
-                          </ContactTag>
-                        </div>
+                      <div className="card-bottom-row">
+                        <ContactTag>
+                          <Tag size={14} color="#61b448ff" />
+                          {categoryName}
+                        </ContactTag>
 
-                        <div
-                          style={{
-                            flex: 1,
-                            display: "flex",
-                            justifyContent: "flex-end",
-                          }}
-                        >
-                          <SquareArrowOutUpRight size={16} />
-                        </div>
+                        <SquareArrowOutUpRight size={16} />
                       </div>
                     </ContactListItem>
                   );

@@ -7,6 +7,11 @@ export const SearchAndAddContainer = styled.div`
   margin: 24px 0;
   gap: 12px;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 export const SearchInputWrapper = styled.div`
@@ -25,6 +30,10 @@ export const SearchInputWrapper = styled.div`
   input {
     padding-left: 36px;
   }
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const SearchBar = styled.input`
@@ -34,6 +43,10 @@ export const SearchBar = styled.input`
   width: 250px;
   outline: none;
   border-color: #61b448ff;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 export const AddContactButton = styled.button`
@@ -62,5 +75,10 @@ export const AddContactButton = styled.button`
 
   svg {
     flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    width: 100%;
+    justify-content: flex-end;
   }
 `;
