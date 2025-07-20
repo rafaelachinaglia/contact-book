@@ -5,6 +5,7 @@ import {
   SearchAndAddContainer,
   AddContactButton,
 } from "./styles";
+import { useIsMobile } from "../../hooks/useIsMobile";
 
 interface Props {
   searchTerm: string;
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export function SearchAndAddBar({ searchTerm, setSearchTerm, onAddContact }: Props) {
-  const isMobile = window.innerWidth <= 768;
+  const isMobile = useIsMobile();
 
   return (
     <SearchAndAddContainer>
@@ -22,6 +23,7 @@ export function SearchAndAddBar({ searchTerm, setSearchTerm, onAddContact }: Pro
         <SearchBar
           type="text"
           placeholder="Digite um nome para busca"
+          aria-label="Buscar contato pelo nome"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

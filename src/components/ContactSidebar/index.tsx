@@ -14,6 +14,52 @@ export interface ContactSidebarProps {
   onCloseMobileMenu?: () => void;
 }
 
+interface CategoryItemProps {
+  name: string;
+  id: string;
+  count: number;
+  onSelect: () => void;
+  onDelete: () => void;
+}
+
+function CategoryItem({ name, count, onSelect, onDelete }: CategoryItemProps) {
+  return (
+    <li
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <span onClick={onSelect} style={{ flex: 1 }}>
+        {name} ({count})
+      </span>
+      <X
+        size={16}
+        style={{ marginLeft: "8px", cursor: "pointer" }}
+        onClick={onDelete}
+      />
+    </li>
+  );
+}
+
+function SidebarOverlay({ onClick }: { onClick: () => void }) {
+  return (
+    <div
+      onClick={onClick}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "rgba(0, 0, 0, 0.4)",
+        zIndex: 9,
+      }}
+    />
+  );
+}
+
 export function ContactSidebar({
   contactCount,
   contacts,
@@ -51,19 +97,8 @@ export function ContactSidebar({
 
   return (
     <>
-      {isMobileOpen && (
-        <div
-          onClick={onCloseMobileMenu}
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            width: "100vw",
-            height: "100vh",
-            backgroundColor: "rgba(0, 0, 0, 0.4)",
-            zIndex: 9,
-          }}
-        />
+      {isMobileOpen && onCloseMobileMenu && (
+        <SidebarOverlay onClick={onCloseMobileMenu} />
       )}
 
       <Sidebar className="glass" data-open={isMobileOpen}>
@@ -92,26 +127,14 @@ export function ContactSidebar({
 
           <ul>
             {categories.map((category) => (
-              <li
+              <CategoryItem
                 key={category.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span
-                  onClick={() => onSelectCategory(category.id)}
-                  style={{ flex: 1 }}
-                >
-                  {category.name} ({contactCountsByCategory[category.id] || 0})
-                </span>
-                <X
-                  size={16}
-                  style={{ marginLeft: "8px", cursor: "pointer" }}
-                  onClick={() => handleDelete(category.id)}
-                />
-              </li>
+                id={category.id}
+                name={category.name}
+                count={contactCountsByCategory[category.id] || 0}
+                onSelect={() => onSelectCategory(category.id)}
+                onDelete={() => handleDelete(category.id)}
+              />
             ))}
           </ul>
         </nav>

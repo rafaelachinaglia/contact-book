@@ -1,4 +1,4 @@
-import { useForm, useFieldArray } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import type { SubmitHandler, DeepPartial } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useContacts } from "../../../hooks/useContacts";

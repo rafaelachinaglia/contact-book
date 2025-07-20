@@ -1,4 +1,4 @@
-import { Phone, MapPin, MoreVertical, Tag, Copy } from "lucide-react";
+import { Phone, MapPin, MoreVertical, Tag } from "lucide-react";
 import { highlightMatch } from "../../utils/highlightMatch";
 import type { Contact } from "../../types/Contact";
 import {
@@ -6,10 +6,8 @@ import {
   CategoryTag,
   ContactActions,
   ContactField,
-  CopyButton,
 } from "./styles";
 import { ContactActionsDropdown } from "../ContactDetail/ContactActionsDropdown";
-import { useCopyToClipboard } from "../../hooks/useCopyToClipboard";
 
 export interface ContactCardProps {
   contact: Contact;
@@ -20,6 +18,20 @@ export interface ContactCardProps {
   onDelete: () => void;
 }
 
+interface ContactInfoLineProps {
+  icon: React.ReactNode;
+  value: string;
+}
+
+function ContactInfoLine({ icon, value }: ContactInfoLineProps) {
+  return (
+    <ContactField>
+      {icon}
+      <span>{value || "-"}</span>
+    </ContactField>
+  );
+}
+
 export function ContactCard({
   contact,
   searchTerm,
@@ -28,49 +40,29 @@ export function ContactCard({
   onEdit,
   onDelete,
 }: ContactCardProps) {
-  const { copiedField, handleCopy } = useCopyToClipboard();
+  const phoneValue = contact.phones?.join(", ") || "";
+  const addressValue = contact.addresses?.join(", ") || "";
 
   return (
     <ContactItem>
       <strong>{highlightMatch(contact.name, searchTerm)}</strong>
+
       <CategoryTag>
         <Tag size={14} />
         {contact.category}
       </CategoryTag>
-      <ContactField>
-        <Phone size={14} color="#61b448ff" />
-        <span>{contact.phones?.length ? contact.phones.join(", ") : "-"}</span>
-        {contact.phones?.length > 0 && (
-          <CopyButton
-            onClick={() => handleCopy(contact.phones.join(", "), "phone")}
-            title="Copiar telefone"
-          >
-            <Copy
-              size={12}
-              color={copiedField === "phone" ? "#61b448" : "#888888"}
-            />
-          </CopyButton>
-        )}
-      </ContactField>
 
-      <ContactField>
-        <MapPin size={14} color="#61b448ff" />
-        <span>
-          {contact.addresses?.length ? contact.addresses.join(", ") : "-"}
-        </span>
-        {contact.addresses?.length > 0 && (
-          <CopyButton
-            onClick={() => handleCopy(contact.addresses.join(", "), "address")}
-            title="Copiar endereço"
-          >
-            <Copy
-              size={12}
-              color={copiedField === "address" ? "#61b448" : "#888888"}
-            />
-          </CopyButton>
-        )}
-      </ContactField>
-      <ContactActions className="dropdown-wrapper">
+      <ContactInfoLine
+        icon={<Phone size={14} color="#61b448ff" />}
+        value={phoneValue}
+      />
+
+      <ContactInfoLine
+        icon={<MapPin size={14} color="#61b448ff" />}
+        value={addressValue}
+      />
+
+      <ContactActions>
         <button className="menu-button" onClick={onToggleMenu}>
           <MoreVertical size={18} />
         </button>
