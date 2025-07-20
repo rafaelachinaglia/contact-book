@@ -7,12 +7,18 @@ export const Form = styled.form`
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    padding-inline: 8px;
   }
 `;
 
 export const FieldCategory = styled.div`
   display: flex;
   flex-direction: column;
+  margin-bottom: 24px;
+
+  @media (max-width: 600px) {
+    margin-bottom: 8px;
+  }
 `;
 
 export const DoubleColumn = styled(FieldCategory)`
@@ -33,6 +39,8 @@ export const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 20px;
   font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
 
   &::placeholder {
     color: #aaa;
@@ -63,6 +71,7 @@ export const ButtonRow = styled.div`
 
   @media (max-width: 600px) {
     flex-direction: column;
+    grid-column: span 1;
   }
 `;
 
@@ -80,10 +89,26 @@ export const SubmitButton = styled.button`
 export const CancelButton = styled.button`
   flex: 1;
   padding: 14px;
-  background-color: #002b5b; 
+  background-color: #002b5b;
   color: white;
   font-weight: bold;
   border: none;
   border-radius: 20px;
   cursor: pointer;
 `;
+
+export const ModalContentWrapper = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+
+  @media (max-width: 600px) {
+    padding: 16px 12px;
+    max-height: 80vh; 
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+`;
+
+
+

@@ -123,7 +123,7 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
     <Form onSubmit={handleSubmit(onSubmit)}>
       <DoubleColumn>
         <Label>Nome</Label>
-        <Input placeholder="Digite o nome" {...register("name")} />
+        <Input placeholder="Digite o nome" {...register("name" as const)} />
         {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
       </DoubleColumn>
 
@@ -189,7 +189,7 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
 
       <FieldCategory>
         <Label>Categoria</Label>
-        <Select {...register("category")}>
+        <Select {...register("category" as const)}>
           <option value="">Selecione uma categoria</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id}>

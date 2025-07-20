@@ -1,35 +1,26 @@
 import styled from "styled-components";
-import type { Styles } from "react-modal";
 
 export const ModalTitle = styled.h2`
   font-size: 1.5rem;
   color: #333;
-  margin-bottom: 20px;
   font-weight: 500;
+
+  @media (min-width: 601px) {
+    margin-bottom: 20px;
+  }
 `;
 
-export const customModalStyles: Styles = {
-  content: {
-    maxWidth: "520px",
-    width: "100%",
-    height: "90vh",
-    margin: "auto",
-    borderRadius: "12px",
-    padding: "0",
-    border: "none",
-    backgroundColor: "#ffffff",
-    boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-    overflow: "hidden",
-    inset: "unset",
-    display: "flex",
-    flexDirection: "column",
-  },
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.4)",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1000,
-  },
-};
+export const ModalContentWrapper = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+
+  @media (max-width: 600px) {
+    padding: 16px 12px;
+    max-height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+`;
+
 
