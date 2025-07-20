@@ -10,12 +10,12 @@ export const Form = styled.form`
   }
 `;
 
-export const FieldGroup = styled.div`
+export const FieldCategory = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-export const DoubleColumn = styled(FieldGroup)`
+export const DoubleColumn = styled(FieldCategory)`
   grid-column: span 2;
 
   @media (max-width: 600px) {

@@ -4,11 +4,13 @@ export const Container = styled.div`
   display: flex;
   height: 100vh;
   background-color: #f6f6f6;
+  overflow: hidden;
 `;
 
 export const MainContent = styled.main`
   flex: 1;
   padding: 30px;
+  overflow-y: auto;
 `;
 
 export const SectionTitle = styled.div`
@@ -35,7 +37,7 @@ export const ContactList = styled.div`
   margin-top: 30px;
 `;
 
-export const ContactGroup = styled.div`
+export const ContactCategory = styled.div`
   margin-bottom: 24px;
 
   h3 {

@@ -2,22 +2,22 @@ import { useState } from "react";
 import { Notebook, BadgePlus, X } from "lucide-react";
 import { Sidebar } from "./styles";
 import { useCategories } from "../../hooks/useCategories";
-import { AddGroupModal } from "../AddGroupModal";
+import { AddCategoryModal } from "../AddCategoryModal";
 import type { Contact } from "../../types/Contact";
 
 export interface ContactSidebarProps {
   contactCount: number;
   contacts: Contact[];
-  onSelectGroup: (group: string | null) => void;
+  onSelectCategory: (category: string | null) => void;
 }
 
 export function ContactSidebar({
   contactCount,
   contacts,
-  onSelectGroup,
+  onSelectCategory,
 }: ContactSidebarProps) {
-  const { categories, deleteCategory } = useCategories(); // certifique-se de que essa função existe
-  const [isAddGroupOpen, setIsAddGroupOpen] = useState(false);
+  const { categories, deleteCategory } = useCategories(); 
+  const [isAddCategoryOpen, setIsAddCategoryOpen] = useState(false);
 
   const contactCountsByCategory = categories.reduce<Record<string, number>>(
     (acc, category) => {
@@ -35,7 +35,7 @@ export function ContactSidebar({
 
     if (count > 0) {
       alert(
-        `O grupo "${categoryName}" possui contatos associados e não pode ser excluído.`
+        `A categoria "${categoryName}" possui contatos associados e não pode ser excluído.`
       );
       return;
     }
@@ -54,16 +54,16 @@ export function ContactSidebar({
           <h1>Contatos</h1>
         </div>
         <nav>
-          <p onClick={() => onSelectGroup(null)}>
+          <p onClick={() => onSelectCategory(null)}>
             Todos os contatos ({contactCount})
           </p>
           <hr />
-          <div className="group-wrapper">
-            <span>Grupos</span>
+          <div className="category-wrapper">
+            <span>Categorias</span>
             <button
-              onClick={() => setIsAddGroupOpen(true)}
+              onClick={() => setIsAddCategoryOpen(true)}
               style={{ background: "none", border: "none", cursor: "pointer" }}
-              aria-label="Adicionar grupo"
+              aria-label="Adicionar Categoria"
             >
               <BadgePlus size={18} color="#fff" strokeWidth={2.5} />
             </button>
@@ -79,7 +79,7 @@ export function ContactSidebar({
                 }}
               >
                 <span
-                  onClick={() => onSelectGroup(category.id)}
+                  onClick={() => onSelectCategory(category.id)}
                   style={{ flex: 1 }}
                 >
                   {category.name} ({contactCountsByCategory[category.id] || 0})
@@ -95,9 +95,9 @@ export function ContactSidebar({
         </nav>
       </Sidebar>
 
-      <AddGroupModal
-        isOpen={isAddGroupOpen}
-        onRequestClose={() => setIsAddGroupOpen(false)}
+      <AddCategoryModal
+        isOpen={isAddCategoryOpen}
+        onRequestClose={() => setIsAddCategoryOpen(false)}
       />
     </>
   );

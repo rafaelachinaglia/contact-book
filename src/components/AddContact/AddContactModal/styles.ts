@@ -11,13 +11,18 @@ export const ModalTitle = styled.h2`
 export const customModalStyles: Styles = {
   content: {
     maxWidth: "520px",
+    width: "100%",
+    height: "90vh",
     margin: "auto",
     borderRadius: "12px",
-    padding: "24px 28px",
+    padding: "0",
     border: "none",
     backgroundColor: "#ffffff",
     boxShadow: "0 4px 16px rgba(0, 0, 0, 0.1)",
-    inset: "unset", // remove posicionamento padrão do react-modal
+    overflow: "hidden",
+    inset: "unset",
+    display: "flex",
+    flexDirection: "column",
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.4)",
@@ -27,3 +32,4 @@ export const customModalStyles: Styles = {
     zIndex: 1000,
   },
 };
+

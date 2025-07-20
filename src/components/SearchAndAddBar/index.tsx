@@ -5,7 +5,7 @@ import { SearchInputWrapper, SearchAndAddContainer } from "./SearchAndAddBar.sty
 interface Props {
   searchTerm: string;
   setSearchTerm: (value: string) => void;
-  onAddContact: () => void; // ← Adicione isso!
+  onAddContact: () => void;
 }
 
 export function SearchAndAddBar({ searchTerm, setSearchTerm, onAddContact }: Props) {

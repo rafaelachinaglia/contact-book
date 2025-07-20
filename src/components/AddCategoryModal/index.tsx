@@ -6,26 +6,24 @@ import {
   ModalFooter,
   ModalHeader,
   Input,
-  ModalOverlay,
-  ModalContainer,
   ModalTitle,
   Button,
 } from "./styles";
 import { customModalStyles } from "../../styles/modalStyles";
 
-interface AddGroupModalProps {
+interface AddCategoryModalProps {
   isOpen: boolean;
   onRequestClose: () => void;
 }
 
-export function AddGroupModal({ isOpen, onRequestClose }: AddGroupModalProps) {
-  const [groupName, setGroupName] = useState("");
+export function AddCategoryModal({ isOpen, onRequestClose }: AddCategoryModalProps) {
+  const [categoryName, setCategoryName] = useState("");
   const { addCategory } = useCategories();
 
-  function handleAddGroup() {
-    if (!groupName.trim()) return;
-    addCategory(groupName.trim());
-    setGroupName("");
+  function handleAddCategory() {
+    if (!categoryName.trim()) return;
+    addCategory(categoryName.trim());
+    setCategoryName("");
     onRequestClose();
   }
 
@@ -33,24 +31,24 @@ export function AddGroupModal({ isOpen, onRequestClose }: AddGroupModalProps) {
     <Modal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel="Add Group Modal"
+      contentLabel="Add Category Modal"
       style={customModalStyles}
     >
       <ModalContent>
         <ModalHeader>
-          <ModalTitle>Novo Grupo</ModalTitle>
+          <ModalTitle>Nova Categoria</ModalTitle>
         </ModalHeader>
         <Input
           type="text"
-          placeholder="Nome do grupo"
-          value={groupName}
-          onChange={(e) => setGroupName(e.target.value)}
+          placeholder="Nome da Categoria"
+          value={categoryName}
+          onChange={(e) => setCategoryName(e.target.value)}
         />
         <ModalFooter>
           <Button onClick={onRequestClose} variant="cancel">
             Cancelar
           </Button>
-          <Button onClick={handleAddGroup}>Adicionar</Button>
+          <Button onClick={handleAddCategory}>Adicionar</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

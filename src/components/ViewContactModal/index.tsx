@@ -7,7 +7,7 @@ import type { Contact } from "../../types/Contact";
 import {
   AvatarCircle,
   ModalContent,
-  InfoGroup,
+  InfoCategory,
   InfoLabel,
   InfoInput,
   InfoTextarea,
@@ -20,7 +20,7 @@ import {
   customModalStyles,
   InfoSelect,
 } from "./styles";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, X } from "lucide-react";
 import { useCategories } from "../../hooks/useCategories";
 
 interface Props {
@@ -42,7 +42,7 @@ type FormData = {
 
 const schema = yup.object({
   name: yup.string().required("Nome é obrigatório!"),
-  category: yup.string().required("Grupo é obrigatório!"),
+  category: yup.string().required("Categoria é obrigatório!"),
   emails: yup
     .array()
     .of(
@@ -103,9 +103,15 @@ export function ViewContactModal({
     });
   }, [contact, reset]);
 
-  const { fields: emailFields } = useFieldArray({ control, name: "emails" });
-  const { fields: phoneFields } = useFieldArray({ control, name: "phones" });
-  const { fields: addressFields } = useFieldArray({
+  const { fields: emailFields, remove: removeEmail } = useFieldArray({
+    control,
+    name: "emails",
+  });
+  const { fields: phoneFields, remove: removePhone } = useFieldArray({
+    control,
+    name: "phones",
+  });
+  const { fields: addressFields, remove: removeAddress } = useFieldArray({
     control,
     name: "addresses",
   });
@@ -142,56 +148,89 @@ export function ViewContactModal({
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <ModalContent>
-          <InfoGroup fullWidth>
+          <InfoCategory fullWidth>
             <InfoLabel>Nome</InfoLabel>
             <InfoInput readOnly={!isEditing} {...register("name")} />
             {errors.name && <span>{errors.name.message}</span>}
-          </InfoGroup>
+          </InfoCategory>
 
           {phoneFields.map((field, index) => (
-            <InfoGroup key={field.id}>
+            <InfoCategory key={field.id}>
               <InfoLabel>Telefone</InfoLabel>
-              <InfoInput
-                readOnly={!isEditing}
-                {...register(`phones.${index}.value`)}
-              />
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <InfoInput
+                  readOnly={!isEditing}
+                  {...register(`phones.${index}.value`)}
+                />
+                {isEditing && (
+                  <X
+                    size={18}
+                    style={{ cursor: "pointer", color: "#999" }}
+                    onClick={() => removePhone(index)}
+                    aria-label="Remover telefone"
+                    color="#c0392b"
+                  />
+                )}
+              </div>
               {errors.phones?.[index]?.value && (
                 <span>{errors.phones[index]?.value?.message}</span>
               )}
-            </InfoGroup>
+            </InfoCategory>
           ))}
 
           {emailFields.map((field, index) => (
-            <InfoGroup key={field.id}>
+            <InfoCategory key={field.id}>
               <InfoLabel>E-mail</InfoLabel>
-              <InfoInput
-                readOnly={!isEditing}
-                {...register(`emails.${index}.value`)}
-              />
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <InfoInput
+                  readOnly={!isEditing}
+                  {...register(`emails.${index}.value`)}
+                />
+                {isEditing && (
+                  <X
+                    size={18}
+                    style={{ cursor: "pointer", color: "#999" }}
+                    onClick={() => removeEmail(index)}
+                    aria-label="Remover e-mail"
+                    color="#c0392b"
+                  />
+                )}
+              </div>
               {errors.emails?.[index]?.value && (
                 <span>{errors.emails[index]?.value?.message}</span>
               )}
-            </InfoGroup>
+            </InfoCategory>
           ))}
 
           {addressFields.map((field, index) => (
-            <InfoGroup key={field.id}>
+            <InfoCategory key={field.id}>
               <InfoLabel>Endereço</InfoLabel>
-              <InfoTextarea
-                readOnly={!isEditing}
-                {...register(`addresses.${index}.value`)}
-              />
+              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                <InfoTextarea
+                  readOnly={!isEditing}
+                  {...register(`addresses.${index}.value`)}
+                />
+                {isEditing && (
+                  <X
+                    size={18}
+                    style={{ cursor: "pointer", color: "#999" }}
+                    onClick={() => removeAddress(index)}
+                    aria-label="Remover endereço"
+                    color="#c0392b"
+                  />
+                )}
+              </div>
               {errors.addresses?.[index]?.value && (
                 <span>{errors.addresses[index]?.value?.message}</span>
               )}
-            </InfoGroup>
+            </InfoCategory>
           ))}
 
-          <InfoGroup>
-            <InfoLabel>Grupo</InfoLabel>
+          <InfoCategory>
+            <InfoLabel>Categoria</InfoLabel>
             {isEditing ? (
-             <InfoSelect {...register("category")}>
-                <option value="">Selecione um grupo</option>
+              <InfoSelect {...register("category")}>
+                <option value="">Selecione uma categoria</option>
                 {categories.map((cat) => (
                   <option key={cat.id} value={cat.id}>
                     {cat.name}
@@ -203,12 +242,12 @@ export function ViewContactModal({
                 readOnly
                 value={
                   categories.find((c) => c.id === contact.category)?.name ||
-                  "Grupo não encontrado"
+                  "Categoria não encontrada"
                 }
               />
             )}
             {errors.category && <span>{errors.category.message}</span>}
-          </InfoGroup>
+          </InfoCategory>
         </ModalContent>
 
         <ButtonRow>

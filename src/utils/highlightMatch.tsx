@@ -1,5 +1,3 @@
-import React from "react";
-
 export function highlightMatch(text: string, term: string) {
   if (!term) return text;
 

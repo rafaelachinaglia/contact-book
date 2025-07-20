@@ -52,7 +52,7 @@ export const Sidebar = styled.aside`
       opacity: 0.3;
     }
 
-    .group-wrapper {
+    .category-wrapper {
       display: flex;
       align-items: center;
       justify-content: space-between;

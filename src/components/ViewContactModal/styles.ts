@@ -1,14 +1,13 @@
-// src/components/ViewContactModal/styles.ts
 import styled from "styled-components";
 
 export const customModalStyles = {
   content: {
-    width: "500px",
-    maxWidth: "90vw",
+    width: "540px",
+    maxWidth: "95vw",
     inset: "50% auto auto 50%",
     transform: "translate(-50%, -50%)",
     borderRadius: "16px",
-    padding: "24px 16px",
+    padding: "32px 24px", 
     backgroundColor: "#fff",
     overflow: "auto",
     maxHeight: "90vh",
@@ -42,11 +41,11 @@ export const ModalTitle = styled.h2`
 
 export const ModalContent = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
 `;
 
-export const InfoGroup = styled.div<{ fullWidth?: boolean }>`
+export const InfoCategory = styled.div<{ fullWidth?: boolean }>`
   display: flex;
   flex-direction: column;
   grid-column: ${({ fullWidth }) => (fullWidth ? "span 2" : "auto")};
@@ -58,7 +57,7 @@ export const InfoLabel = styled.label`
 `;
 
 export const InfoInput = styled.input`
-  padding: 10px;
+  padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 16px;
   font-size: 16px;
@@ -73,7 +72,7 @@ export const InfoInput = styled.input`
 `;
 
 export const InfoTextarea = styled.textarea`
-  padding: 10px;
+  padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 16px;
   font-size: 16px;
@@ -85,7 +84,7 @@ export const InfoTextarea = styled.textarea`
 `;
 
 export const InfoSelect = styled.select`
-  padding: 10px;
+  padding: 10px 14px;
   border: 1px solid #ccc;
   border-radius: 24px;
   font-size: 16px;
@@ -104,7 +103,7 @@ export const ButtonRow = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 16px;
-  margin-top: 24px;
+  margin-top: 32px;
 
   @media (max-width: 600px) {
     flex-direction: column;

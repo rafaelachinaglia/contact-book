@@ -6,7 +6,7 @@ import { useContacts } from "../../../hooks/useContacts";
 import { useCategories } from "../../../hooks/useCategories";
 import {
   Form,
-  FieldGroup,
+  FieldCategory,
   DoubleColumn,
   Label,
   Input,
@@ -35,7 +35,7 @@ type FormData = {
 const schema = yup
   .object({
     name: yup.string().required("Nome é obrigatório!"),
-    category: yup.string().required("Grupo é obrigatório!"),
+    category: yup.string().required("Categoria é obrigatório!"),
     emails: yup
       .array()
       .of(
@@ -127,7 +127,7 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
         {errors.name && <ErrorMessage>{errors.name.message}</ErrorMessage>}
       </DoubleColumn>
 
-      <FieldGroup>
+      <FieldCategory>
         <Label>Telefone</Label>
         {phoneFields.map((field, index) => (
           <div key={field.id}>
@@ -145,9 +145,9 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
         <AddButton type="button" onClick={() => addPhone({ value: "" })}>
           + Adicionar telefone
         </AddButton>
-      </FieldGroup>
+      </FieldCategory>
 
-      <FieldGroup>
+      <FieldCategory>
         <Label>E-mail</Label>
         {emailFields.map((field, index) => (
           <div key={field.id}>
@@ -165,9 +165,9 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
         <AddButton type="button" onClick={() => addEmail({ value: "" })}>
           + Adicionar e-mail
         </AddButton>
-      </FieldGroup>
+      </FieldCategory>
 
-      <FieldGroup>
+      <FieldCategory>
         <Label>Endereço</Label>
         {addressFields.map((field, index) => (
           <div key={field.id}>
@@ -185,14 +185,14 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
         <AddButton type="button" onClick={() => addAddress({ value: "" })}>
           + Adicionar endereço
         </AddButton>
-      </FieldGroup>
+      </FieldCategory>
 
-      <FieldGroup>
-        <Label>Grupo</Label>
+      <FieldCategory>
+        <Label>Categoria</Label>
         <Select {...register("category")}>
-          <option value="">Selecione um grupo</option>
+          <option value="">Selecione uma categoria</option>
           {categories.map((category) => (
-            <option key={category.id} value={category.name}>
+            <option key={category.id} value={category.id}>
               {category.name}
             </option>
           ))}
@@ -200,7 +200,7 @@ export function AddContactForm({ onSuccess }: AddContactFormProps) {
         {errors.category && (
           <ErrorMessage>{errors.category.message}</ErrorMessage>
         )}
-      </FieldGroup>
+      </FieldCategory>
 
       <ButtonRow>
         <CancelButton type="button" onClick={onSuccess}>
