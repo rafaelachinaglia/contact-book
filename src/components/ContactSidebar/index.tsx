@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Notebook, BadgePlus, X } from "lucide-react";
 import { Sidebar } from "./styles";
 import { useCategories } from "../../hooks/useCategories";
-import { AddCategoryModal } from "../AddCategoryModal";
+import { AddCategoryModal } from "../AddCategoryModal/AddCategoryModal";
 import type { Contact } from "../../types/Contact";
 import { toast } from "react-toastify";
 

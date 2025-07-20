@@ -19,10 +19,14 @@ import {
   TrashButton,
   InfoSelect,
   ModalContentWrapper,
+  AddFieldButton,
 } from "./styles";
 import { Pencil, Trash2, X } from "lucide-react";
 import { useCategories } from "../../hooks/useCategories";
+import { useContacts } from "../../hooks/useContacts";
 import { customModalStyles } from "../../styles/modalStyles";
+import { toast } from "react-toastify";
+import InputMask from "react-input-mask";
 
 interface Props {
   contact: Contact;
@@ -58,12 +62,24 @@ const schema = yup.object({
     .required(),
   phones: yup
     .array()
-    .of(yup.object({ value: yup.string().required("Telefone obrigatório!") }))
+    .of(
+      yup.object({
+        value: yup
+          .string()
+          .trim()
+          .matches(/^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/, "Telefone inválido!")
+          .required("Telefone obrigatório!"),
+      })
+    )
     .min(1, "Pelo menos um telefone é obrigatório!")
     .required(),
   addresses: yup
     .array()
-    .of(yup.object({ value: yup.string().required("Endereço obrigatório!") }))
+    .of(
+      yup.object({
+        value: yup.string().required("Endereço obrigatório!"),
+      })
+    )
     .min(1, "Pelo menos um endereço é obrigatório!")
     .required(),
 });
@@ -76,13 +92,14 @@ export function ViewContactModal({
 }: Props) {
   const [isEditing, setIsEditing] = useState(false);
   const { categories } = useCategories();
+  const { contacts } = useContacts();
 
   const {
     register,
     handleSubmit,
     control,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitted },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -104,28 +121,92 @@ export function ViewContactModal({
     });
   }, [contact, reset]);
 
-  const { fields: emailFields, remove: removeEmail } = useFieldArray({
-    control,
-    name: "emails",
-  });
-  const { fields: phoneFields, remove: removePhone } = useFieldArray({
-    control,
-    name: "phones",
-  });
-  const { fields: addressFields, remove: removeAddress } = useFieldArray({
-    control,
-    name: "addresses",
-  });
+  useEffect(() => {
+    if (isSubmitted && Object.keys(errors).length > 0) {
+      const allErrors = [
+        errors.name?.message,
+        errors.category?.message,
+        ...(Array.isArray(errors.emails)
+          ? errors.emails.map((e) => e?.value?.message)
+          : []),
+        ...(Array.isArray(errors.phones)
+          ? errors.phones.map((p) => p?.value?.message)
+          : []),
+        ...(Array.isArray(errors.addresses)
+          ? errors.addresses.map((a) => a?.value?.message)
+          : []),
+      ];
+
+      allErrors
+        .filter((msg): msg is string => !!msg)
+        .forEach((msg) => toast.error(msg));
+    }
+  }, [errors, isSubmitted]);
+
+  const {
+    fields: emailFields,
+    remove: removeEmail,
+    append: addEmail,
+  } = useFieldArray({ control, name: "emails" });
+
+  const {
+    fields: phoneFields,
+    remove: removePhone,
+    append: addPhone,
+  } = useFieldArray({ control, name: "phones" });
+
+  const {
+    fields: addressFields,
+    remove: removeAddress,
+    append: addAddress,
+  } = useFieldArray({ control, name: "addresses" });
 
   const onSubmit = (data: FormData) => {
+    const isDuplicate = (arr: string[]) =>
+      new Set(arr.map((v) => v.trim().toLowerCase())).size !== arr.length;
+
+    const emails = data.emails.map((e) => e.value);
+    const phones = data.phones.map((p) => p.value);
+    const addresses = data.addresses.map((a) => a.value);
+
+    const duplicateErrors: string[] = [];
+
+    if (isDuplicate(emails)) {
+      duplicateErrors.push("E-mails duplicados não são permitidos!");
+    }
+
+    if (isDuplicate(phones)) {
+      duplicateErrors.push("Telefones duplicados não são permitidos!");
+    }
+
+    if (isDuplicate(addresses)) {
+      duplicateErrors.push("Endereços duplicados não são permitidos!");
+    }
+
+    const nameAlreadyExists = contacts.some(
+      (c) =>
+        c.id !== contact.id &&
+        c.name.trim().toLowerCase() === data.name.trim().toLowerCase()
+    );
+
+    if (nameAlreadyExists) {
+      duplicateErrors.push("Já existe um contato com esse nome.");
+    }
+
+    if (duplicateErrors.length > 0) {
+      duplicateErrors.forEach((err) => toast.error(err));
+      return;
+    }
+
     const updated: Contact = {
       id: contact.id,
       name: data.name,
       category: data.category,
-      emails: data.emails.map((e) => e.value),
-      phones: data.phones.map((p) => p.value),
-      addresses: data.addresses.map((a) => a.value),
+      emails,
+      phones,
+      addresses,
     };
+
     onSave(updated);
     setIsEditing(false);
   };
@@ -154,32 +235,45 @@ export function ViewContactModal({
             <InfoCategory fullWidth>
               <InfoLabel>Nome</InfoLabel>
               <InfoInput readOnly={!isEditing} {...register("name")} />
-              {errors.name && <span>{errors.name.message}</span>}
             </InfoCategory>
 
             {phoneFields.map((field, index) => (
               <InfoCategory key={field.id} fullWidth>
                 <InfoLabel>Telefone</InfoLabel>
                 <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                  <InfoInput
-                    readOnly={!isEditing}
+                  <InputMask
+                    mask="(99)99999-9999"
+                    maskChar=""
+                    alwaysShowMask
+                    disabled={!isEditing}
                     {...register(`phones.${index}.value`)}
-                  />
+                  >
+                    {(inputProps) => (
+                      <InfoInput
+                        {...inputProps}
+                        inputMode="numeric"
+                      />
+                    )}
+                  </InputMask>
                   {isEditing && (
                     <X
                       size={18}
                       style={{ cursor: "pointer", color: "#999" }}
                       onClick={() => removePhone(index)}
-                      aria-label="Remover telefone"
                       color="#c0392b"
                     />
                   )}
                 </div>
-                {errors.phones?.[index]?.value && (
-                  <span>{errors.phones[index]?.value?.message}</span>
-                )}
               </InfoCategory>
             ))}
+
+            {isEditing && (
+              <InfoCategory fullWidth>
+                <AddFieldButton type="button" onClick={() => addPhone({ value: "" })}>
+                  + Adicionar telefone
+                </AddFieldButton>
+              </InfoCategory>
+            )}
 
             {emailFields.map((field, index) => (
               <InfoCategory key={field.id} fullWidth>
@@ -194,16 +288,20 @@ export function ViewContactModal({
                       size={18}
                       style={{ cursor: "pointer", color: "#999" }}
                       onClick={() => removeEmail(index)}
-                      aria-label="Remover e-mail"
                       color="#c0392b"
                     />
                   )}
                 </div>
-                {errors.emails?.[index]?.value && (
-                  <span>{errors.emails[index]?.value?.message}</span>
-                )}
               </InfoCategory>
             ))}
+
+            {isEditing && (
+              <InfoCategory fullWidth>
+                <AddFieldButton type="button" onClick={() => addEmail({ value: "" })}>
+                  + Adicionar e-mail
+                </AddFieldButton>
+              </InfoCategory>
+            )}
 
             {addressFields.map((field, index) => (
               <InfoCategory key={field.id} fullWidth>
@@ -218,16 +316,20 @@ export function ViewContactModal({
                       size={18}
                       style={{ cursor: "pointer", color: "#999" }}
                       onClick={() => removeAddress(index)}
-                      aria-label="Remover endereço"
                       color="#c0392b"
                     />
                   )}
                 </div>
-                {errors.addresses?.[index]?.value && (
-                  <span>{errors.addresses[index]?.value?.message}</span>
-                )}
               </InfoCategory>
             ))}
+
+            {isEditing && (
+              <InfoCategory fullWidth>
+                <AddFieldButton type="button" onClick={() => addAddress({ value: "" })}>
+                  + Adicionar endereço
+                </AddFieldButton>
+              </InfoCategory>
+            )}
 
             <InfoCategory fullWidth>
               <InfoLabel>Categoria</InfoLabel>
@@ -249,7 +351,6 @@ export function ViewContactModal({
                   }
                 />
               )}
-              {errors.category && <span>{errors.category.message}</span>}
             </InfoCategory>
           </ModalContent>
 

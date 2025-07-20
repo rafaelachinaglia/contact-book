@@ -37,7 +37,7 @@ export const AvatarCircle = styled.div`
 export const ModalContent = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 8px;
+  gap: 16px;
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
@@ -181,6 +181,19 @@ export const TrashButton = styled.button`
 
   &:hover {
     opacity: 0.9;
+  }
+`;
+
+export const AddFieldButton = styled.button`
+  background: none;
+  border: none;
+  color: #61b448;
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
   }
 `;
 

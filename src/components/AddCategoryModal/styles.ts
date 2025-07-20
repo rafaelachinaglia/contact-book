@@ -18,8 +18,6 @@ export const ModalContent = styled.div`
 
 export const ModalHeader = styled.div`
   margin-bottom: 16px;
-
-
 `;
 
 export const ModalTitle = styled.h2`

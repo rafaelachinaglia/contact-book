@@ -1,5 +1,5 @@
 import Modal from "react-modal";
-import { AddContactForm } from "../AddContactForm";
+import { AddContactForm } from "../AddContactForm/AddContactForm";
 import { ModalTitle, ModalContentWrapper } from "./styles"; // adicionamos ModalContentWrapper
 import { customModalStyles } from "../../../styles/modalStyles";
 
