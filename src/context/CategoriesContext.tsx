@@ -1,4 +1,11 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
+import { toast } from "react-toastify";
 
 export interface Category {
   id: string;
@@ -12,7 +19,11 @@ interface CategoriesContextType {
   deleteCategory: (id: string) => Promise<void>;
 }
 
-const CategoriesContext = createContext<CategoriesContextType | undefined>(undefined);
+const CategoriesContext = createContext<CategoriesContextType | undefined>(
+  undefined
+);
+
+const BASE_URL = "http://localhost:3001/categories";
 
 export function CategoriesProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -20,30 +31,63 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
 
   async function fetchCategories() {
     setLoading(true);
-    const res = await fetch("http://localhost:3001/categories");
-    const data = await res.json();
-    setCategories(data);
-    setLoading(false);
+    try {
+      const res = await fetch(BASE_URL);
+      if (!res.ok) throw new Error("Erro ao buscar categorias.");
+      const data = await res.json();
+      setCategories(data);
+    } catch (error) {
+      console.error("Erro ao carregar categorias:", error);
+      toast.error("Não foi possível carregar as categorias.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function addCategory(name: string) {
-    const newCategory = { id: crypto.randomUUID(), name };
-    const res = await fetch("http://localhost:3001/categories", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newCategory),
-    });
+    const nameLower = name.trim().toLowerCase();
+    const alreadyExists = categories.some(
+      (cat) => cat.name.trim().toLowerCase() === nameLower
+    );
 
-    if (res.ok) {
+    if (alreadyExists) {
+      toast.warn("Essa categoria já existe!");
+      return;
+    }
+
+    const newCategory = { id: crypto.randomUUID(), name };
+
+    try {
+      const res = await fetch(BASE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newCategory),
+      });
+
+      if (!res.ok) throw new Error("Erro ao adicionar categoria.");
+
       setCategories((prev) => [...prev, newCategory]);
+      toast.success("Categoria adicionada com sucesso!");
+    } catch (error) {
+      console.error("Erro ao adicionar categoria:", error);
+      toast.error("Erro ao adicionar categoria.");
     }
   }
 
   async function deleteCategory(id: string) {
-    await fetch(`http://localhost:3001/categories/${id}`, {
-      method: "DELETE",
-    });
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+    try {
+      const res = await fetch(`${BASE_URL}/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!res.ok) throw new Error("Erro ao deletar categoria.");
+
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+      toast.success("Categoria excluída com sucesso!");
+    } catch (error) {
+      console.error("Erro ao deletar categoria:", error);
+      toast.error("Erro ao excluir categoria.");
+    }
   }
 
   useEffect(() => {

@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import type { Contact } from "../types/Contact";
 import {
   getContacts,
@@ -6,6 +12,7 @@ import {
   updateContact,
   deleteContact,
 } from "../services/contactService";
+import { toast } from "react-toastify";
 
 interface ContactsContextType {
   contacts: Contact[];
@@ -17,7 +24,9 @@ interface ContactsContextType {
   removeContact: (id: number) => Promise<void>;
 }
 
-const ContactsContext = createContext<ContactsContextType | undefined>(undefined);
+const ContactsContext = createContext<ContactsContextType | undefined>(
+  undefined
+);
 
 export function ContactsProvider({ children }: { children: ReactNode }) {
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -25,30 +34,51 @@ export function ContactsProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   const fetchContacts = async () => {
+    setLoading(true);
     try {
-      setLoading(true);
       const data = await getContacts();
       setContacts(data);
+      setError(null);
     } catch (err) {
-      setError("Failed to fetch contacts.");
+      console.error("Erro ao buscar contatos:", err);
+      setError("Erro ao buscar contatos.");
+      toast.error("Erro ao carregar contatos.");
     } finally {
       setLoading(false);
     }
   };
 
   const addContact = async (contact: Omit<Contact, "id">) => {
-    const newContact = await createContact(contact);
-    setContacts((prev) => [...prev, newContact]);
+    try {
+      const newContact = await createContact(contact);
+      setContacts((prev) => [...prev, newContact]);
+      toast.success("Contato adicionado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao adicionar contato:", err);
+      toast.error("Erro ao adicionar contato.");
+    }
   };
 
   const editContact = async (id: number, contact: Omit<Contact, "id">) => {
-    const updated = await updateContact(id, contact);
-    setContacts((prev) => prev.map((c) => (c.id === id ? updated : c)));
+    try {
+      const updated = await updateContact(id, contact);
+      setContacts((prev) => prev.map((c) => (c.id === id ? updated : c)));
+      toast.success("Contato atualizado com sucesso!");
+    } catch (err) {
+      console.error("Erro ao editar contato:", err);
+      toast.error("Erro ao atualizar contato.");
+    }
   };
 
   const removeContact = async (id: number) => {
-    await deleteContact(id);
-    setContacts((prev) => prev.filter((c) => c.id !== id));
+    try {
+      await deleteContact(id);
+      setContacts((prev) => prev.filter((c) => c.id !== id));
+      toast.success("Contato removido com sucesso!");
+    } catch (err) {
+      console.error("Erro ao remover contato:", err);
+      toast.error("Erro ao remover contato.");
+    }
   };
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AddContactModal } from "../../components/AddContact/AddContactModal";
-import { ViewContactModal } from "../../components/ViewContactModal";
+import { ViewContactModal } from "../../components/ViewContactModal/ViewContactModal";
 import { useContacts } from "../../hooks/useContacts";
 import type { Contact } from "../../types/Contact";
 import {
