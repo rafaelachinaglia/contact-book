@@ -19,9 +19,7 @@ export const ModalContent = styled.div`
 export const ModalHeader = styled.div`
   margin-bottom: 16px;
 
-  @media (max-width: 768px) {
-    text-align: center;
-  }
+
 `;
 
 export const ModalTitle = styled.h2`

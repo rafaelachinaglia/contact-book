@@ -10,6 +10,8 @@ import {
   ContactList,
   ContactCategory,
   ContactListItem,
+  ContactItemContent,
+  ContactMetaRow,
   ContactName,
   ContactTag,
   MobileMenuButton,
@@ -42,11 +44,11 @@ export function ContactsPage() {
     );
 
   const categoryedContacts = filteredContacts.reduce<Record<string, Contact[]>>(
-    (categorys, contact) => {
+    (acc, contact) => {
       const categoryKey = contact.name[0].toUpperCase();
-      categorys[categoryKey] ||= [];
-      categorys[categoryKey].push(contact);
-      return categorys;
+      acc[categoryKey] ||= [];
+      acc[categoryKey].push(contact);
+      return acc;
     },
     {}
   );
@@ -65,15 +67,10 @@ export function ContactsPage() {
       />
 
       <MainContent>
-        {/* Botão de abrir menu no mobile */}
-        <MobileMenuButton
-          onClick={() => setIsMobileSidebarOpen(true)}
-          aria-label="Abrir menu"
-        >
+        <MobileMenuButton onClick={() => setIsMobileSidebarOpen(true)}>
           <Menu size={24} color="#61b448" />
         </MobileMenuButton>
 
-        {/* Botão de adicionar contato no mobile */}
         <FloatingAddButton onClick={() => setIsAddModalOpen(true)}>
           <Plus size={22} color="#fff" />
         </FloatingAddButton>
@@ -110,22 +107,21 @@ export function ContactsPage() {
                       key={contact.id}
                       onClick={() => setSelectedContact(contact)}
                     >
-                      <div className="card-top-row">
+                      <ContactItemContent>
                         <ContactName title={contact.name}>
                           {contact.name.length > 50
                             ? `${contact.name.slice(0, 50)}...`
                             : contact.name}
                         </ContactName>
-                      </div>
 
-                      <div className="card-bottom-row">
-                        <ContactTag>
-                          <Tag size={14} color="#61b448ff" />
-                          {categoryName}
-                        </ContactTag>
-
-                        <SquareArrowOutUpRight size={16} />
-                      </div>
+                        <ContactMetaRow>
+                          <ContactTag>
+                            <Tag size={14} color="#61b448ff" />
+                            {categoryName}
+                          </ContactTag>
+                          <SquareArrowOutUpRight size={16} color="#61b448ff" />
+                        </ContactMetaRow>
+                      </ContactItemContent>
                     </ContactListItem>
                   );
                 })}

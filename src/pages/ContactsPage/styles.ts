@@ -35,7 +35,6 @@ export const SectionTitle = styled.div`
   }
 `;
 
-
 export const ContactList = styled.div`
   margin-top: 30px;
 
@@ -51,6 +50,12 @@ export const ContactCategory = styled.div`
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 8px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
   }
 
   @media (max-width: 768px) {
@@ -72,38 +77,44 @@ export const ContactListItem = styled.li`
   &:hover {
     box-shadow: 0 0 6px rgba(0, 0, 0, 0.06);
   }
+`;
+
+export const ContactItemContent = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  column-gap: 16px;
 
   @media (max-width: 768px) {
-    padding: 16px;
-    border-radius: 16px;
-  }
-
-  .card-top-row {
     display: flex;
-    align-items: center;
-    margin-bottom: 6px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
   }
+`;
 
-  .card-bottom-row {
+export const ContactMetaRow = styled.div`
+  display: contents;
+
+  @media (max-width: 768px) {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
   }
 `;
 
-
 export const ContactName = styled.span`
   font-weight: 600;
   font-size: 16px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   @media (max-width: 768px) {
     font-size: 18px;
     width: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 4px;
   }
 `;
 
@@ -113,6 +124,7 @@ export const ContactTag = styled.span`
   gap: 6px;
   font-size: 14px;
   color: #666;
+  min-width: 100px;
 
   svg {
     flex-shrink: 0;
@@ -155,6 +167,3 @@ export const FloatingAddButton = styled.button`
     cursor: pointer;
   }
 `;
-
-
-
