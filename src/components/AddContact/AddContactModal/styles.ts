@@ -11,15 +11,16 @@ export const ModalTitle = styled.h2`
 `;
 
 export const ModalContentWrapper = styled.div`
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
   overflow-y: auto;
-  padding: 24px;
+  padding: 32px 24px;
 
   @media (max-width: 600px) {
-    padding: 16px 12px;
-    max-height: 100%;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
+    padding: 24px 16px;
+    max-height: calc(100vh - 40px);
+    padding-bottom: 48px;
   }
 `;
 

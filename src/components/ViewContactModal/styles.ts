@@ -1,23 +1,18 @@
 import styled from "styled-components";
 
-export const customModalStyles = {
-  content: {
-    width: "540px",
-    maxWidth: "95vw",
-    inset: "50% auto auto 50%",
-    transform: "translate(-50%, -50%)",
-    borderRadius: "16px",
-    padding: "32px 24px", 
-    backgroundColor: "#fff",
-    overflow: "auto",
-    maxHeight: "90vh",
-    position: "relative" as const,
-  },
-  overlay: {
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 1000,
-  },
-};
+export const ModalContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px 24px;
+
+  @media (max-width: 600px) {
+    padding: 24px 16px;
+    padding-bottom: 48px;
+    max-height: calc(100vh - 40px);
+  }
+`;
 
 export const AvatarCircle = styled.div`
   width: 80px;
@@ -31,18 +26,22 @@ export const AvatarCircle = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 auto 24px;
-`;
+  flex-shrink: 0;
 
-export const ModalTitle = styled.h2`
-  margin-bottom: 24px;
-  color: #61b448;
-  text-align: center;
+  @media (max-width: 600px) {
+    width: 80px;
+    height: 80px;
+  }
 `;
 
 export const ModalContent = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 20px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 export const InfoCategory = styled.div<{ fullWidth?: boolean }>`
@@ -69,6 +68,8 @@ export const InfoInput = styled.input`
   &:read-only {
     background-color: #f8f8f8;
   }
+
+  width: 100%;
 `;
 
 export const InfoTextarea = styled.textarea`
@@ -81,6 +82,8 @@ export const InfoTextarea = styled.textarea`
   &:read-only {
     background-color: #f8f8f8;
   }
+
+  width: 100%;
 `;
 
 export const InfoSelect = styled.select`
@@ -97,6 +100,8 @@ export const InfoSelect = styled.select`
   &:focus {
     border-color: #61b448;
   }
+
+  width: 100%;
 `;
 
 export const ButtonRow = styled.div`

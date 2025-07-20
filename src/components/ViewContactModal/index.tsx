@@ -17,11 +17,12 @@ import {
   EditButton,
   CloseButton,
   TrashButton,
-  customModalStyles,
   InfoSelect,
+  ModalContentWrapper,
 } from "./styles";
 import { Pencil, Trash2, X } from "lucide-react";
 import { useCategories } from "../../hooks/useCategories";
+import { customModalStyles } from "../../styles/modalStyles";
 
 interface Props {
   contact: Contact;
@@ -42,7 +43,7 @@ type FormData = {
 
 const schema = yup.object({
   name: yup.string().required("Nome é obrigatório!"),
-  category: yup.string().required("Categoria é obrigatório!"),
+  category: yup.string().required("Categoria é obrigatória!"),
   emails: yup
     .array()
     .of(
@@ -137,146 +138,149 @@ export function ViewContactModal({
       onRequestClose={onClose}
       contentLabel="Visualizar ou Editar Contato"
       style={customModalStyles}
+      ariaHideApp={false}
     >
-      {!isEditing && (
-        <EditButton onClick={() => setIsEditing(true)} title="Editar">
-          <Pencil />
-        </EditButton>
-      )}
+      <ModalContentWrapper>
+        {!isEditing && (
+          <EditButton onClick={() => setIsEditing(true)} title="Editar">
+            <Pencil />
+          </EditButton>
+        )}
 
-      <AvatarCircle>{firstLetter}</AvatarCircle>
+        <AvatarCircle>{firstLetter}</AvatarCircle>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <ModalContent>
-          <InfoCategory fullWidth>
-            <InfoLabel>Nome</InfoLabel>
-            <InfoInput readOnly={!isEditing} {...register("name")} />
-            {errors.name && <span>{errors.name.message}</span>}
-          </InfoCategory>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <ModalContent>
+            <InfoCategory fullWidth>
+              <InfoLabel>Nome</InfoLabel>
+              <InfoInput readOnly={!isEditing} {...register("name")} />
+              {errors.name && <span>{errors.name.message}</span>}
+            </InfoCategory>
 
-          {phoneFields.map((field, index) => (
-            <InfoCategory key={field.id}>
-              <InfoLabel>Telefone</InfoLabel>
-              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+            {phoneFields.map((field, index) => (
+              <InfoCategory key={field.id} fullWidth>
+                <InfoLabel>Telefone</InfoLabel>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <InfoInput
+                    readOnly={!isEditing}
+                    {...register(`phones.${index}.value`)}
+                  />
+                  {isEditing && (
+                    <X
+                      size={18}
+                      style={{ cursor: "pointer", color: "#999" }}
+                      onClick={() => removePhone(index)}
+                      aria-label="Remover telefone"
+                      color="#c0392b"
+                    />
+                  )}
+                </div>
+                {errors.phones?.[index]?.value && (
+                  <span>{errors.phones[index]?.value?.message}</span>
+                )}
+              </InfoCategory>
+            ))}
+
+            {emailFields.map((field, index) => (
+              <InfoCategory key={field.id} fullWidth>
+                <InfoLabel>E-mail</InfoLabel>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <InfoInput
+                    readOnly={!isEditing}
+                    {...register(`emails.${index}.value`)}
+                  />
+                  {isEditing && (
+                    <X
+                      size={18}
+                      style={{ cursor: "pointer", color: "#999" }}
+                      onClick={() => removeEmail(index)}
+                      aria-label="Remover e-mail"
+                      color="#c0392b"
+                    />
+                  )}
+                </div>
+                {errors.emails?.[index]?.value && (
+                  <span>{errors.emails[index]?.value?.message}</span>
+                )}
+              </InfoCategory>
+            ))}
+
+            {addressFields.map((field, index) => (
+              <InfoCategory key={field.id} fullWidth>
+                <InfoLabel>Endereço</InfoLabel>
+                <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                  <InfoTextarea
+                    readOnly={!isEditing}
+                    {...register(`addresses.${index}.value`)}
+                  />
+                  {isEditing && (
+                    <X
+                      size={18}
+                      style={{ cursor: "pointer", color: "#999" }}
+                      onClick={() => removeAddress(index)}
+                      aria-label="Remover endereço"
+                      color="#c0392b"
+                    />
+                  )}
+                </div>
+                {errors.addresses?.[index]?.value && (
+                  <span>{errors.addresses[index]?.value?.message}</span>
+                )}
+              </InfoCategory>
+            ))}
+
+            <InfoCategory fullWidth>
+              <InfoLabel>Categoria</InfoLabel>
+              {isEditing ? (
+                <InfoSelect {...register("category")}>
+                  <option value="">Selecione uma categoria</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
+                  ))}
+                </InfoSelect>
+              ) : (
                 <InfoInput
-                  readOnly={!isEditing}
-                  {...register(`phones.${index}.value`)}
+                  readOnly
+                  value={
+                    categories.find((c) => c.id === contact.category)?.name ||
+                    "Categoria não encontrada"
+                  }
                 />
-                {isEditing && (
-                  <X
-                    size={18}
-                    style={{ cursor: "pointer", color: "#999" }}
-                    onClick={() => removePhone(index)}
-                    aria-label="Remover telefone"
-                    color="#c0392b"
-                  />
-                )}
-              </div>
-              {errors.phones?.[index]?.value && (
-                <span>{errors.phones[index]?.value?.message}</span>
               )}
+              {errors.category && <span>{errors.category.message}</span>}
             </InfoCategory>
-          ))}
+          </ModalContent>
 
-          {emailFields.map((field, index) => (
-            <InfoCategory key={field.id}>
-              <InfoLabel>E-mail</InfoLabel>
-              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                <InfoInput
-                  readOnly={!isEditing}
-                  {...register(`emails.${index}.value`)}
-                />
-                {isEditing && (
-                  <X
-                    size={18}
-                    style={{ cursor: "pointer", color: "#999" }}
-                    onClick={() => removeEmail(index)}
-                    aria-label="Remover e-mail"
-                    color="#c0392b"
-                  />
-                )}
-              </div>
-              {errors.emails?.[index]?.value && (
-                <span>{errors.emails[index]?.value?.message}</span>
-              )}
-            </InfoCategory>
-          ))}
-
-          {addressFields.map((field, index) => (
-            <InfoCategory key={field.id}>
-              <InfoLabel>Endereço</InfoLabel>
-              <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
-                <InfoTextarea
-                  readOnly={!isEditing}
-                  {...register(`addresses.${index}.value`)}
-                />
-                {isEditing && (
-                  <X
-                    size={18}
-                    style={{ cursor: "pointer", color: "#999" }}
-                    onClick={() => removeAddress(index)}
-                    aria-label="Remover endereço"
-                    color="#c0392b"
-                  />
-                )}
-              </div>
-              {errors.addresses?.[index]?.value && (
-                <span>{errors.addresses[index]?.value?.message}</span>
-              )}
-            </InfoCategory>
-          ))}
-
-          <InfoCategory>
-            <InfoLabel>Categoria</InfoLabel>
+          <ButtonRow>
             {isEditing ? (
-              <InfoSelect {...register("category")}>
-                <option value="">Selecione uma categoria</option>
-                {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
-                ))}
-              </InfoSelect>
+              <>
+                <SaveButton type="submit">Salvar</SaveButton>
+                <CancelButton type="button" onClick={() => setIsEditing(false)}>
+                  Cancelar
+                </CancelButton>
+              </>
             ) : (
-              <InfoInput
-                readOnly
-                value={
-                  categories.find((c) => c.id === contact.category)?.name ||
-                  "Categoria não encontrada"
-                }
-              />
+              <>
+                <TrashButton
+                  type="button"
+                  onClick={() => {
+                    onDelete(contact.id);
+                    onClose();
+                  }}
+                >
+                  <Trash2 />
+                  Excluir
+                </TrashButton>
+                <CloseButton type="button" onClick={onClose}>
+                  Fechar
+                </CloseButton>
+              </>
             )}
-            {errors.category && <span>{errors.category.message}</span>}
-          </InfoCategory>
-        </ModalContent>
-
-        <ButtonRow>
-          {isEditing ? (
-            <>
-              <SaveButton type="submit">Salvar</SaveButton>
-              <CancelButton type="button" onClick={() => setIsEditing(false)}>
-                Cancelar
-              </CancelButton>
-            </>
-          ) : (
-            <>
-              <TrashButton
-                type="button"
-                onClick={() => {
-                  onDelete(contact.id);
-                  onClose();
-                }}
-              >
-                <Trash2 />
-                Excluir
-              </TrashButton>
-              <CloseButton type="button" onClick={onClose}>
-                Fechar
-              </CloseButton>
-            </>
-          )}
-        </ButtonRow>
-      </form>
+          </ButtonRow>
+        </form>
+      </ModalContentWrapper>
     </Modal>
   );
 }

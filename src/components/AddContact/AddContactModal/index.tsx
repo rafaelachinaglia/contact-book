@@ -1,7 +1,7 @@
 import Modal from "react-modal";
 import { AddContactForm } from "../AddContactForm";
-import { ModalTitle } from "./styles";
-import { customModalStyles } from "../../ViewContactModal/styles";
+import { ModalTitle, ModalContentWrapper } from "./styles"; // adicionamos ModalContentWrapper
+import { customModalStyles } from "../../../styles/modalStyles";
 
 interface AddContactModalProps {
   isOpen: boolean;
@@ -15,9 +15,12 @@ export function AddContactModal({ isOpen, onRequestClose }: AddContactModalProps
       onRequestClose={onRequestClose}
       contentLabel="Add Contact Modal"
       style={customModalStyles}
+      ariaHideApp={false}
     >
-      <ModalTitle>Novo Contato</ModalTitle>
-      <AddContactForm onSuccess={onRequestClose} />
+      <ModalContentWrapper>
+        <ModalTitle>Novo Contato</ModalTitle>
+        <AddContactForm onSuccess={onRequestClose} />
+      </ModalContentWrapper>
     </Modal>
   );
 }

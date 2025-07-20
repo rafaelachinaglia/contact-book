@@ -2,18 +2,16 @@ import type { Styles } from "react-modal";
 
 export const customModalStyles: Styles = {
   content: {
-    maxWidth: "500px",
-    width: "90vw",
-    height: "90vh",
-    margin: "auto",
-    borderRadius: "12px",
+    inset: "50% auto auto 50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#fff",
     padding: "0",
-    inset: "unset",
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
+    border: "none",
+    borderRadius: "16px",
+    maxHeight: "90vh",
+    maxWidth: "95vw",
+    width: "540px",
     overflow: "hidden",
-    boxSizing: "border-box",
   },
   overlay: {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -21,6 +19,5 @@ export const customModalStyles: Styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "16px",
   },
 };
